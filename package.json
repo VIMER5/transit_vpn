@@ -1,0 +1,9 @@
+{
+  "name": "transit-vpn",
+  "version": "1.0.0",
+  "description": "transit-vpn",
+  "type": "module",
+  "author": "VIMER",
+  "license": "ISC",
+  "scripts": {}
+}
