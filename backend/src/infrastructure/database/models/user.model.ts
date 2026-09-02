@@ -1,7 +1,11 @@
 import { Model, DataTypes, Sequelize, NonAttribute } from "sequelize";
 export class User extends Model {
-  declare id: number;
+  declare id: bigint;
   declare tg_id: bigint;
+  declare first_name: string | null;
+  declare last_name: string | null;
+  declare username: string | null;
+  declare photo_url: string | null;
   declare referral_code: string;
   declare referred_by_id: bigint;
   declare status: "active" | "banned";
@@ -12,6 +16,10 @@ export class User extends Model {
       {
         id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true },
         tg_id: { type: DataTypes.BIGINT, allowNull: false, unique: true },
+        first_name: { type: DataTypes.STRING, allowNull: true, defaultValue: null },
+        last_name: { type: DataTypes.STRING, allowNull: true, defaultValue: null },
+        username: { type: DataTypes.STRING, allowNull: true, defaultValue: null },
+        photo_url: { type: DataTypes.STRING, allowNull: true, defaultValue: null },
         referral_code: { type: DataTypes.STRING(16), unique: true },
         referred_by_id: {
           type: DataTypes.BIGINT,
