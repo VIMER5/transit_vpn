@@ -1,4 +1,4 @@
-import { AppError } from "../../shared/errors/app.error.js";
+import { AppError } from "./app.error.js";
 
 class authError {
   static initDataInvalid() {
@@ -7,6 +7,12 @@ class authError {
 
   static initDataExpired() {
     return new AppError("auth_initDataExpired", 401, "срок действия данных для инициализации истек");
+  }
+  static guardTokenNotFound() {
+    return new AppError("guard_tokenNotFound", 401, "нет токена");
+  }
+  static guardTokenIsInvalid() {
+    return new AppError("guard_tokenIsInvalid", 401, "токен недействителен");
   }
 }
 

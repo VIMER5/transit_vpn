@@ -2,7 +2,6 @@ export interface TokenPayLoad {
   id: bigint;
 }
 
-export interface tokens {
+export interface token {
   accessToken: string;
-  refreshToken: string;
 }

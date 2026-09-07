@@ -1,18 +1,17 @@
 import crypto from "crypto";
-import authError from "./auth.errors.js";
+import authError from "../../shared/errors/auth.errors.js";
 import { UserInfoInInitData } from "../../shared/types/user.types.js";
 import userService from "../users/user.service.js";
-import { tokens } from "../../shared/types/token.types.js";
+import { token } from "../../shared/types/token.types.js";
 import tokenService from "./token.service.js";
-
-const { botTgToken } = process.env;
+import { config } from "../../config.js";
 
 class authService {
-  async authTelegram(initData: string): Promise<tokens> {
+  async authTelegram(initData: string): Promise<token> {
     const UserInfo = this.authenticationInitData(initData);
     const data = await this.updateInfo(UserInfo);
-    const tokens: tokens = await tokenService.createdToken({ id: data.id });
-    return tokens;
+    const token: token = await tokenService.createdToken({ id: data.id });
+    return token;
   }
 
   private async updateInfo(UserInfo: UserInfoInInitData) {
@@ -29,7 +28,7 @@ class authService {
     dataCheckArr.sort();
     const dataCheckString = dataCheckArr.join("\n");
 
-    const secretKey = crypto.createHmac("sha256", "WebAppData").update(botTgToken!).digest();
+    const secretKey = crypto.createHmac("sha256", "WebAppData").update(config.tg.botToken).digest();
     const calculatedHash = crypto.createHmac("sha256", secretKey).update(dataCheckString).digest("hex");
 
     if (calculatedHash != receivedHash) {
@@ -45,8 +44,8 @@ class authService {
     };
     const authDate = parseInt(params.get("auth_date")!, 10);
     const now = Math.floor(Date.now() / 1000);
-    if (now - authDate > 60) {
-      // throw authError.initDataExpired();
+    if (now - authDate > 60 && config.isProd) {
+      throw authError.initDataExpired();
     }
     return userData;
   }

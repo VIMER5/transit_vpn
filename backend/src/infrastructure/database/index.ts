@@ -1,11 +1,10 @@
 import { Sequelize } from "sequelize";
 import { models } from "./init.models.js";
+import { config } from "../../config.js";
 
-const { db_DataBaseName, db_host, db_port, db_login, db_pass } = process.env;
-
-const db = new Sequelize(db_DataBaseName!, db_login!, db_pass!, {
-  host: db_host!,
-  port: Number(db_port!),
+const db = new Sequelize(config.db.name, config.db.login, config.db.pass, {
+  host: config.db.host,
+  port: config.db.port,
   dialect: "postgres",
   logging: false,
 });

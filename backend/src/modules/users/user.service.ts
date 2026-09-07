@@ -26,12 +26,3 @@ class UserService {
 }
 
 export default new UserService();
-
-//5U+qhGU9xm3U5tfX
-//j3hocuXgYmMBr1z6
-//JbVZGOzsO+6D+O1/
-//eunvAbfsKVvIGxrT
-//KmERZhWxNc
-//kdyyUBLKac
-//8394f8bae55c426e5ed0a448
-//847106e1c5881f174714e48e

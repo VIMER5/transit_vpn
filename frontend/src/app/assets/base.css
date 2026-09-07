@@ -1,0 +1,33 @@
+:root {
+  --color-blue-950: #090c14;
+  --color-blue-900: #0f1420;
+  --color-blue-850: #171f30;
+  --color-blue-850-92: rgba(23, 31, 48, 0.92);
+  --color-blue-800: #1d2740;
+  --color-blue-700: #2a3548;
+
+  --color-shale-500: #57607a;
+  --color-amber-500: #c9a15a;
+  --color-red-500: #e04242;
+}
+:root {
+  --max-app-w: 430px;
+  --font-size: 14px;
+}
+:root {
+  --bg-deep: var(--color-blue-950);
+  --bg-main: var(--color-blue-900);
+  --c-accent: var(--color-amber-500);
+  --c-line: var(--color-blue-700);
+  --c-main-text: var(--color-shale-500);
+}
+
+body {
+  background-color: var(--bg-deep);
+  min-height: 100vh;
+  color: var(--c-main-text);
+  font-size: var(--font-size);
+  font-family: "JetBrains Mono";
+  font-weight: normal;
+  font-style: normal;
+}
