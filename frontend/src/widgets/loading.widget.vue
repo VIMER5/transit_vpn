@@ -22,7 +22,7 @@ onUnmounted(() => {
 
 <template>
   <div class="loading">
-    <logo class="loading__logo" />
+    <logo class="loading__logo" state="loading" />
     <div class="text">{{ phrases[currentPhraseIndex] }}</div>
     <loadersProgressLine class="loadersLine" />
   </div>
@@ -43,20 +43,7 @@ onUnmounted(() => {
 .text {
   margin-top: 15px;
   margin-bottom: 20px;
-}
-</style>
-<style>
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-.loading__logo > .circleDots {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: spin 4s linear infinite;
+  max-width: 80%;
+  text-align: center;
 }
 </style>

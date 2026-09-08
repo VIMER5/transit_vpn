@@ -1,4 +1,23 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from "vue";
+
+const { state = "default" } = defineProps<{
+  state?: "loading" | "default" | "error";
+}>();
+
+const COLOR_MAP: Record<string, string> = {
+  error: "#e04242",
+  loading: "#C9A15A",
+  default: "#4FB8A6",
+};
+
+const isLoading = computed(() => state === "loading");
+const isError = computed(() => state === "error");
+const isDefault = computed(() => state === "default");
+
+const iconСolor = computed(() => COLOR_MAP[state] ?? "#4FB8A6");
+const circleColor = computed(() => (isError.value ? COLOR_MAP["error"] : "#C9A15A"));
+</script>
 
 <template>
   <svg width="109" height="109" viewBox="0 0 109 109" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -8,9 +27,10 @@
     />
     <path
       class="circleDots"
+      :class="{ circleDotsInLoading: isLoading }"
       opacity="0.7"
       d="M54.4999 98.1C78.5795 98.1 98.0999 78.5796 98.0999 54.5C98.0999 30.4204 78.5795 10.9 54.4999 10.9C30.4203 10.9 10.8999 30.4204 10.8999 54.5C10.8999 78.5796 30.4203 98.1 54.4999 98.1Z"
-      stroke="#C9A15A"
+      :stroke="circleColor"
       stroke-width="1.5"
       stroke-dasharray="3 7"
     />
@@ -25,12 +45,21 @@
     <path
       d="M85.0199 95.92C92.2438 95.92 98.0999 90.0639 98.0999 82.84C98.0999 75.6161 92.2438 69.76 85.0199 69.76C77.7961 69.76 71.9399 75.6161 71.9399 82.84C71.9399 90.0639 77.7961 95.92 85.0199 95.92Z"
       fill="#0F1420"
-      stroke="#4FB8A6"
+      :stroke="iconСolor"
       stroke-width="2"
     />
     <path
+      v-if="isDefault || isLoading"
       d="M79.5701 82.84L83.3851 86.655L91.0151 77.935"
-      stroke="#4FB8A6"
+      :stroke="iconСolor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      v-if="isError"
+      d="M80 88L85 82.5M90 77L85 82.5M85 82.5L90 88L80 77"
+      :stroke="iconСolor"
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
@@ -38,4 +67,18 @@
   </svg>
 </template>
 
-<style scoped></style>
+<style scoped>
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.circleDotsInLoading {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin 4s linear infinite;
+}
+</style>

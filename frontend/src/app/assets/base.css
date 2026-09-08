@@ -20,6 +20,8 @@
   --c-accent: var(--color-amber-500);
   --c-line: var(--color-blue-700);
   --c-main-text: var(--color-shale-500);
+  --bg-button: var(--color-blue-850-92);
+  --bg-main-panel: var(--color-blue-850-92);
 }
 
 body {
@@ -27,7 +29,7 @@ body {
   min-height: 100vh;
   color: var(--c-main-text);
   font-size: var(--font-size);
-  font-family: "JetBrains Mono";
+  font-family: "Manrope";
   font-weight: normal;
   font-style: normal;
 }

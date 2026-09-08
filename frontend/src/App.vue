@@ -1,20 +1,23 @@
 <script setup lang="ts">
 import loadingWidget from "@/widgets/loading.widget.vue";
-import { useTelegram } from "@/shared/lib/telegram/useTelegram";
+import { useTelegram } from "@/composables/useTelegram";
 import { onMounted } from "vue";
-import { useAuthStore } from "./app/entities/auth/store/auth.store";
+import { useAuthStore } from "@/app/stores/auth.store";
+import { initApp } from "./composables/initApp";
+import ErrorScreen from "./views/error.screen.vue";
 const { ready, expand } = useTelegram();
-const authStore = useAuthStore();
+const { run, status, errorMessage } = initApp();
 onMounted(async () => {
   ready();
   expand();
-  await authStore.login();
+  run();
 });
 </script>
 
 <template>
-  <loadingWidget v-if="!authStore.isRedy" />
-  <div class="dd" v-else>dwd</div>
+  <loadingWidget v-if="status == 'loading'" />
+  <ErrorScreen @retry="run" :error-text="errorMessage" v-else-if="status == 'error'" />
+  <RouterView v-else />
 </template>
 
 <style scoped></style>

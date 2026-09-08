@@ -2,9 +2,12 @@ import Joi from "joi";
 
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string().valid("dev", "prod").default("prod"),
+  swagger: Joi.boolean().default(false),
   PORT: Joi.number().default(3030),
   IP: Joi.string().default("0.0.0.0"),
   botTgToken: Joi.string().min(20).max(80).required(),
+
+  domainWeb: Joi.string().required(),
 
   db_DataBaseName: Joi.string().required(),
   db_host: Joi.string().required(),
@@ -25,9 +28,13 @@ if (error) {
 export const config = {
   isDev: envVars.NODE_ENV === "dev",
   isProd: envVars.NODE_ENV === "prod",
+  swagger: envVars.swagger,
   server: {
     port: envVars.PORT,
     IP: envVars.IP,
+  },
+  domain: {
+    domainWeb: envVars.domainWeb,
   },
   tg: {
     botToken: envVars.botTgToken,

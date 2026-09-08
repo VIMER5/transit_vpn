@@ -2,7 +2,7 @@ import { AppError } from "./app.error.js";
 
 class authError {
   static initDataInvalid() {
-    return new AppError("auth_initDataInvalid", 401, "данные инициализации неверны");
+    return new AppError("auth_initDataInvalid", 401, "Инициализация приложения выполнена некорректно.");
   }
 
   static initDataExpired() {
