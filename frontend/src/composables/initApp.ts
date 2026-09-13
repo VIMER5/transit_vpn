@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { useTelegram } from "./useTelegram";
 import { useAuthStore } from "@/app/stores/auth.store";
 import { AxiosError } from "axios";
+import { useUserStore } from "@/app/stores/user.store";
 const { VITE_INIT_DATA, VITE_NODE_ENV } = import.meta.env;
 
 export function initApp() {
@@ -14,6 +15,11 @@ export function initApp() {
       const { initData } = useTelegram();
       const authStore = useAuthStore();
       await authStore.login(VITE_NODE_ENV == "dev" ? VITE_INIT_DATA : initData);
+
+      const userStore = useUserStore();
+
+      await Promise.all([userStore.fetch()]);
+
       status.value = "ready";
     } catch (e) {
       console.error("ошибка initApp:", e);

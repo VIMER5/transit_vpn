@@ -3,6 +3,11 @@ import { UserInfoInInitData } from "../../shared/types/user.types.js";
 import crypto from "crypto";
 
 class UserService {
+  async getUserByID(userId: bigint) {
+    return await User.findByPk(userId, {
+      attributes: { exclude: ["createdAt"] },
+    });
+  }
   async userFindByTgID(userTgID: number) {
     return await User.findOne({ where: { tg_id: userTgID } });
   }

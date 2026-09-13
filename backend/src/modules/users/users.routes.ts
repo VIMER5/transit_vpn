@@ -1,14 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
 import UsersError from "./users.error.js";
+import userController from "./user.controller.js";
 
 const userRoutes = express.Router();
 
-userRoutes.post("/", (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // throw UsersError.userNotFound();
-  } catch (e) {
-    next(e);
-  }
-});
+userRoutes.get("/", userController.getUserInfo);
 
 export default userRoutes;

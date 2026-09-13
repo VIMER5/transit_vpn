@@ -4,7 +4,10 @@ import navWidget from "@/widgets/nav.widget.vue";
 
 <template>
   <div class="mainLayour">
-    <div class="content"><RouterView /></div>
+    <div class="content">
+      <RouterView />
+      <header class="header">Transit VPN</header>
+    </div>
     <navWidget />
   </div>
 </template>
@@ -18,7 +21,17 @@ import navWidget from "@/widgets/nav.widget.vue";
 }
 .content {
   flex: 1;
-  overflow: scroll;
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE и Edge */
   margin: 20px 20px 0px 20px;
+}
+.content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.header {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 8px;
 }
 </style>

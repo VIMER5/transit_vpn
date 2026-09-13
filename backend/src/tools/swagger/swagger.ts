@@ -2,13 +2,18 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
 import { Express } from "express";
+import { app_schema } from "./docs/app/app.schema.js";
+import { authPaths } from "./docs/auth/docs.auth.js";
+import { auth_schema } from "./docs/auth/schem.auth.js";
+import { UserPaths } from "./docs/user/docs.user.js";
+import { user_schema } from "./docs/user/schem.user.js";
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
     info: {
       title: "API",
       version: "1.0.0",
-      description: "Документация VoixChat API",
+      description: "Документация Transit API",
       contact: {
         name: "Поддержка",
         url: "https://t.me/The_crazy_fun",
@@ -20,6 +25,10 @@ const options: swaggerJsdoc.Options = {
         description: "Dev server",
       },
     ],
+    paths: {
+      ...authPaths,
+      ...UserPaths,
+    },
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -29,13 +38,21 @@ const options: swaggerJsdoc.Options = {
           description: "Введите токен без слова 'Bearer'",
         },
       },
-      schemas: {},
+      schemas: {
+        ...app_schema,
+        ...auth_schema,
+        ...user_schema,
+      },
       responses: {},
     },
     tags: [
       {
         name: "Auth",
         description: "Операции аутентификации и авторизации",
+      },
+      {
+        name: "User",
+        description: "Операции с пользователем",
       },
     ],
   },
