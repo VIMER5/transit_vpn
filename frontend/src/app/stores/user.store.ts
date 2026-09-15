@@ -29,6 +29,14 @@ export const useUserStore = defineStore("UserStore", () => {
     if (!profile.value) return "";
     return `@${profile.value.username}`.trim();
   });
+  const balanceInRUB = computed(() => {
+    if (!profile.value) return 0;
+    return profile.value.balance / 100;
+  });
+  const balanceSrt = computed(() => {
+    if (!profile.value) return "";
+    return Number(balanceInRUB.value).toLocaleString("de-DE") ?? balanceInRUB.value;
+  });
 
-  return { profile, userFullName, username, fetchUserProfile, fetch };
+  return { profile, userFullName, username, balanceSrt, balanceInRUB, fetchUserProfile, fetch };
 });

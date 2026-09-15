@@ -41,7 +41,7 @@ export const user_schema = {
       },
       balance: {
         type: "number",
-        description: "баланс пользователя",
+        description: "баланс пользователя(в копейках)",
       },
       updatedAt: {
         type: "string",

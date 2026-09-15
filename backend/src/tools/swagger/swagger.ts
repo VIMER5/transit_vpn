@@ -7,6 +7,8 @@ import { authPaths } from "./docs/auth/docs.auth.js";
 import { auth_schema } from "./docs/auth/schem.auth.js";
 import { UserPaths } from "./docs/user/docs.user.js";
 import { user_schema } from "./docs/user/schem.user.js";
+import { PlansPaths } from "./docs/plans/docs.plans.js";
+import { plans_schema } from "./docs/plans/schem.plans.js";
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
@@ -28,6 +30,7 @@ const options: swaggerJsdoc.Options = {
     paths: {
       ...authPaths,
       ...UserPaths,
+      ...PlansPaths,
     },
     components: {
       securitySchemes: {
@@ -42,6 +45,7 @@ const options: swaggerJsdoc.Options = {
         ...app_schema,
         ...auth_schema,
         ...user_schema,
+        ...plans_schema,
       },
       responses: {},
     },
@@ -53,6 +57,10 @@ const options: swaggerJsdoc.Options = {
       {
         name: "User",
         description: "Операции с пользователем",
+      },
+      {
+        name: "Plans",
+        description: "Операции с планами",
       },
     ],
   },

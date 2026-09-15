@@ -3,12 +3,13 @@
   --color-blue-900: #0f1420;
   --color-blue-850: #171f30;
   --color-blue-850-92: rgba(23, 31, 48, 0.92);
+  --color-blue-850-50: rgba(23, 31, 48, 0.5);
   --color-blue-800: #1d2740;
   --color-blue-700: #2a3548;
-
   --color-shale-500: #57607a;
   --color-amber-500: #c9a15a;
   --color-red-500: #e04242;
+  --color-green-500: #4fb872;
 }
 :root {
   --max-app-w: 430px;
@@ -22,6 +23,7 @@
   --c-main-text: var(--color-shale-500);
   --bg-button: var(--color-blue-850-92);
   --bg-main-panel: var(--color-blue-850-92);
+  --c-money: var(--color-green-500);
 }
 
 body {
