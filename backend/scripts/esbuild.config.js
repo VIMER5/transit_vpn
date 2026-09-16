@@ -44,6 +44,7 @@ const ctx = await esbuild.context({
     "http",
     "swagger-ui-express",
     "swagger-jsdoc",
+    "grammy",
   ],
   plugins: [
     {

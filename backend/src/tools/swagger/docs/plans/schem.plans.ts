@@ -2,30 +2,33 @@ export const plans_schema = {
   PublicTariffPlansResponse: {
     type: "array",
     items: {
-      type: "object",
-      properties: {
-        id: {
-          type: "number",
-        },
-        title: {
-          type: "string",
-          description: "Название тарифа.",
-        },
-        price_kopecks: {
-          type: "number",
-          description: "Цена тарифа в копейках",
-        },
-        duration_months: {
-          type: "number",
-          description: "Продолжительность в месяцах.",
-        },
-        device_limit: {
-          type: "number",
-          description: "Кол-во устройств",
-        },
-        accent: {
-          type: "boolean",
-        },
+      $ref: "#/components/schemas/PublicTariffPlans",
+    },
+  },
+  PublicTariffPlans: {
+    type: "object",
+    properties: {
+      id: {
+        type: "number",
+      },
+      title: {
+        type: "string",
+        description: "Название тарифа.",
+      },
+      price_kopecks: {
+        type: "number",
+        description: "Цена тарифа в копейках",
+      },
+      duration_months: {
+        type: "number",
+        description: "Продолжительность в месяцах.",
+      },
+      device_limit: {
+        type: "number",
+        description: "Кол-во устройств",
+      },
+      accent: {
+        type: "boolean",
       },
     },
   },

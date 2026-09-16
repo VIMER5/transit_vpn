@@ -14,7 +14,7 @@ export function initApp() {
     try {
       const { initData } = useTelegram();
       const authStore = useAuthStore();
-      await authStore.login(VITE_NODE_ENV == "dev" ? VITE_INIT_DATA : initData);
+      await authStore.login(VITE_NODE_ENV == "dev" && !initData ? VITE_INIT_DATA : initData);
 
       const userStore = useUserStore();
 

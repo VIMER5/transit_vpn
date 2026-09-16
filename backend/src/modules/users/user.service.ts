@@ -8,7 +8,7 @@ class UserService {
       attributes: { exclude: ["createdAt"] },
     });
   }
-  async userFindByTgID(userTgID: number) {
+  async userFindByTgID(userTgID: bigint) {
     return await User.findOne({ where: { tg_id: userTgID } });
   }
   async userСreating(UserData: UserInfoInInitData): Promise<User> {
@@ -16,6 +16,19 @@ class UserService {
     if (user) return user;
     const newUser = await User.create({ ...UserData, referral_code: await this.CreateReferralCode() });
     return newUser;
+  }
+  async createUser(tg_id: bigint, invited_by: bigint): Promise<User> {
+    const user = await this.userFindByTgID(tg_id);
+    if (user) return user;
+    const newUser = await User.create({
+      tg_id,
+      referral_code: await this.CreateReferralCode(),
+      referred_by_id: invited_by,
+    });
+    return newUser;
+  }
+  async getUserViaReferralCode(referral_code: string) {
+    return await User.findOne({ where: { referral_code } });
   }
   private async CreateReferralCode(length = 10): Promise<string> {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

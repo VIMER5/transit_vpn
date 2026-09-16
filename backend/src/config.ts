@@ -6,6 +6,18 @@ const envVarsSchema = Joi.object({
   PORT: Joi.number().default(3030),
   IP: Joi.string().default("0.0.0.0"),
   botTgToken: Joi.string().min(20).max(80).required(),
+  tgAdminIDs: Joi.string()
+    .required()
+    .custom((value, helpers) => {
+      const parsed = value
+        .split(",")
+        .map((id: string) => Number(id.trim()))
+        .filter((id: number) => !isNaN(id));
+      if (parsed.length === 0) {
+        return helpers.error("any.invalid");
+      }
+      return parsed;
+    }),
 
   domainWeb: Joi.string().required(),
 
@@ -38,6 +50,7 @@ export const config = {
   },
   tg: {
     botToken: envVars.botTgToken,
+    adminsID: envVars.tgAdminIDs,
   },
   db: {
     name: envVars.db_DataBaseName,

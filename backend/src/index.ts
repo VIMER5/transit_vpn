@@ -8,6 +8,15 @@ import errorMiddleware from "./middleware/error.middleware.js";
 import { connection } from "./infrastructure/database/index.js";
 import { setupSwagger } from "./tools/swagger/swagger.js";
 import { printServerStarted } from "./tools/nameplate/nameplate.js";
+import bot from "./infrastructure/telegram/bot.js";
+import { initBotHandlers } from "./modules/bot/index.js";
+
+initBotHandlers();
+bot.start({
+  onStart: (botInfo) => {
+    console.log(`Telegram bot @${botInfo.username} успешно запущен!`);
+  },
+});
 
 const app = express();
 app.use(express.json());

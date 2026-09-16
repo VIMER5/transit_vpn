@@ -9,6 +9,13 @@ class PlansService {
     });
     return data;
   }
+  async getPublicTariffPlansByID(id: number) {
+    const data = await plans.findOne({
+      where: { id },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    });
+    return data;
+  }
   async getPricing() {
     const data = await pricingConfig.findOne({
       where: { id: 1 },
