@@ -5,7 +5,7 @@ class PlansError {
     return new AppError("plans_BadRequest", 400, "BadRequest");
   }
   static NotFound() {
-    return new AppError("plans_NotFound", 404, "NotFound");
+    return new AppError("plans_NotFound", 404, "План не найден");
   }
 }
 

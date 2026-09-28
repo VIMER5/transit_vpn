@@ -7,6 +7,7 @@ export class plans extends Model {
   declare duration_months: number;
   declare device_limit: number;
   declare accent: boolean;
+  declare active: boolean;
 
   static initModel(sequelize: Sequelize) {
     plans.init(
@@ -17,6 +18,7 @@ export class plans extends Model {
         duration_months: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
         device_limit: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
         accent: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+        active: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
       },
       {
         sequelize: sequelize,

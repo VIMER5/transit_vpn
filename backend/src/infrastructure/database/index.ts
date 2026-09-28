@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { models } from "./init.models.js";
+import { models, setupAssociations } from "./init.models.js";
 import { config } from "../../config.js";
 import { seedPricingDefaults } from "./seed.js";
 
@@ -15,6 +15,7 @@ async function initModels() {
     model.initModel(db);
     console.log(`Модель ${model.name} инициализирована`);
   }
+  setupAssociations();
   console.log("Связи моделей настроены");
 }
 

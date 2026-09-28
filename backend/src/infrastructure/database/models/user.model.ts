@@ -9,7 +9,7 @@ export class User extends Model {
   declare referral_code: string;
   declare referred_by_id: bigint;
   declare status: "active" | "banned";
-  declare dalance: number;
+  declare balance: number;
 
   static initModel(sequelize: Sequelize) {
     User.init(

@@ -1,0 +1,29 @@
+import { Model, Sequelize, DataTypes } from "sequelize";
+
+export class subscriptions extends Model {
+  declare id: number;
+  declare plan_id: number;
+  declare plan_title: string | "custom";
+  declare device_limit: number;
+  declare price_paid_kopecks: number;
+  declare expires_at: Date;
+  declare status: "active" | "expired";
+
+  static initModel(sequelize: Sequelize) {
+    subscriptions.init(
+      {
+        id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+        plan_id: { type: DataTypes.INTEGER, allowNull: true, references: { model: "plans", key: "id" } },
+        plan_title: { type: DataTypes.STRING, allowNull: false, defaultValue: "custom" },
+        device_limit: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+        price_paid_kopecks: { type: DataTypes.INTEGER, allowNull: false },
+        expires_at: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
+        status: { type: DataTypes.ENUM("active", "expired"), allowNull: false, defaultValue: "active" },
+      },
+      {
+        sequelize: sequelize,
+        tableName: "subscriptions",
+      },
+    );
+  }
+}
