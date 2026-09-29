@@ -3,6 +3,7 @@ import Main from "@/app/layout/main.vue";
 import HomeView from "@/views/HomeView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import TariffsView from "@/views/TariffsView.vue";
+import ProfileLayout from "@/app//layout/profile.layout.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,19 +18,27 @@ const router = createRouter({
           component: HomeView,
         },
         {
-          path: "/tariffs",
+          path: "tariffs",
           name: "tariffs",
           component: TariffsView,
         },
         {
-          path: "/devices",
+          path: "devices",
           name: "devices",
           component: import("../../views/AboutView.vue"),
         },
         {
-          path: "/profile",
-          name: "profile",
-          component: ProfileView,
+          path: "profile",
+          component: ProfileLayout,
+          children: [
+            {
+              path: "",
+              name: "profile",
+              component: ProfileView,
+            },
+            { path: "refstatistics", name: "refstatistics", component: TariffsView },
+            { path: "payment_history", name: "paymentHistory", component: TariffsView },
+          ],
         },
       ],
     },

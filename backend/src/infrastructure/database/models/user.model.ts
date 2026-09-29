@@ -24,7 +24,6 @@ export class User extends Model {
         referred_by_id: {
           type: DataTypes.BIGINT,
           allowNull: true,
-          defaultValue: null,
         },
         status: { type: DataTypes.ENUM("active", "banned"), allowNull: false, defaultValue: "active" },
         balance: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },

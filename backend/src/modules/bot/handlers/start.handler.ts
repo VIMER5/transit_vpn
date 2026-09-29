@@ -20,7 +20,7 @@ export async function handleStart(ctx: BotContext) {
     if (userWhoInvited && userWhoInvited.tg_id != currentUserId) {
       const currentUser = await userService.userFindByTgID(currentUserId);
       if (!currentUser) {
-        await userService.createUser(currentUserId, userWhoInvited.tg_id);
+        await userService.createUser(currentUserId, userWhoInvited.id);
         try {
           await ctx.api.sendMessage(
             userWhoInvited.tg_id.toString(),

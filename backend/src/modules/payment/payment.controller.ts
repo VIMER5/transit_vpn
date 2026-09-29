@@ -5,8 +5,8 @@ class paymentController {
   async test(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       let data;
-      if (req.body.type == "topup")
-        data = await paymentService.creditBalance(req.userId!, req.body.amount, { type: "topup" });
+      if (req.body.type != "purchase")
+        data = await paymentService.creditBalance(req.userId!, req.body.amount, { type: req.body.type });
       else data = await paymentService.debitBalance(req.userId!, req.body.amount, { type: "purchase" });
       res.status(200).json(data);
     } catch (e) {

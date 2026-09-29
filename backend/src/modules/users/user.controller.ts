@@ -12,6 +12,14 @@ class UserController {
       next(e);
     }
   }
+  async getRefInfo(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const data = await userService.getUserReferralStatistics(req.userId!);
+      res.status(200).json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new UserController();

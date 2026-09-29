@@ -37,6 +37,10 @@ export const useUserStore = defineStore("UserStore", () => {
     if (!profile.value) return "";
     return Number(balanceInRUB.value).toLocaleString("de-DE") ?? balanceInRUB.value;
   });
+  const photoUrl = computed(() => {
+    if (!profile.value) return "";
+    return profile.value.photo_url ?? "https://i.pinimg.com/736x/c3/ba/8e/c3ba8ef6ef692b84ad2b20eddcbe41f4.jpg";
+  });
 
-  return { profile, userFullName, username, balanceSrt, balanceInRUB, fetchUserProfile, fetch };
+  return { profile, userFullName, username, balanceSrt, balanceInRUB, photoUrl, fetchUserProfile, fetch };
 });

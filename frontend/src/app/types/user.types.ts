@@ -11,3 +11,10 @@ export interface UserProfile {
   balance: number;
   updatedAt: string;
 }
+
+export interface UserReferralStatistics {
+  referral_code: string;
+  referralsCount: number;
+  sumReferralsBonus: number;
+  url: string;
+}
