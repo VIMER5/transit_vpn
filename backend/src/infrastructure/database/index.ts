@@ -3,7 +3,7 @@ import { models, setupAssociations } from "./init.models.js";
 import { config } from "../../config.js";
 import { seedDefaultsSettings, seedPricingDefaults } from "./seed.js";
 
-const db = new Sequelize(config.db.name, config.db.login, config.db.pass, {
+export const db = new Sequelize(config.db.name, config.db.login, config.db.pass, {
   host: config.db.host,
   port: config.db.port,
   dialect: "postgres",

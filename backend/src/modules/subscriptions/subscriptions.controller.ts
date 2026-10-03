@@ -10,6 +10,14 @@ class subController {
       next(e);
     }
   }
+  async getCurrentSub(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const data = await subscriptionsService.getCurrentUserSub(req.userId!);
+      res.status(200).json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new subController();

@@ -27,4 +27,40 @@ export const UserPaths = {
       },
     },
   },
+  "/api/referral_statistics/": {
+    get: {
+      summary: "Информация о партнёрской программе пользователя",
+      tags: ["User"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/CurrentStatisticsUserReferral" },
+            },
+          },
+        },
+        400: {
+          description: "Некорректные данные",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+      },
+    },
+  },
 };

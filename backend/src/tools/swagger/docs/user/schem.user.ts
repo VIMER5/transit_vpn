@@ -49,4 +49,25 @@ export const user_schema = {
       },
     },
   },
+  CurrentStatisticsUserReferral: {
+    type: "object",
+    properties: {
+      referral_code: {
+        type: "string",
+        description: "реф. код пользователя",
+      },
+      referralsCount: {
+        type: "number",
+        description: "кол-во приглашенных",
+      },
+      sumReferralsBonus: {
+        type: "number",
+        description: "сумма боносов от реф.(в копейках)",
+      },
+      url: {
+        type: "string",
+        description: "Ссылка для приглашений",
+      },
+    },
+  },
 };

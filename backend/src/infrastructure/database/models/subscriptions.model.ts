@@ -2,6 +2,7 @@ import { Model, Sequelize, DataTypes } from "sequelize";
 
 export class subscriptions extends Model {
   declare id: number;
+  declare sub_uuid: string;
   declare plan_id: number;
   declare plan_title: string | "custom";
   declare device_limit: number;
@@ -13,6 +14,7 @@ export class subscriptions extends Model {
     subscriptions.init(
       {
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+        sub_uuid: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, allowNull: false, unique: true },
         plan_id: { type: DataTypes.INTEGER, allowNull: true, references: { model: "plans", key: "id" } },
         plan_title: { type: DataTypes.STRING, allowNull: false, defaultValue: "custom" },
         device_limit: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },

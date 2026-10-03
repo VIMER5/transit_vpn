@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize, NonAttribute } from "sequelize";
+import { subscriptions } from "./subscriptions.model.js";
 export class User extends Model {
   declare id: bigint;
   declare tg_id: bigint;
@@ -10,6 +11,8 @@ export class User extends Model {
   declare referred_by_id: bigint;
   declare status: "active" | "banned";
   declare balance: number;
+  declare sub_id: number;
+  declare Sub?: NonAttribute<subscriptions>;
 
   static initModel(sequelize: Sequelize) {
     User.init(
@@ -27,6 +30,7 @@ export class User extends Model {
         },
         status: { type: DataTypes.ENUM("active", "banned"), allowNull: false, defaultValue: "active" },
         balance: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+        sub_id: { type: DataTypes.INTEGER, allowNull: true },
       },
       { sequelize: sequelize, tableName: "users" },
     );

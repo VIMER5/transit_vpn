@@ -11,5 +11,8 @@ export function setupAssociations() {
 
   User.hasMany(User, { foreignKey: "referred_by_id", as: "usersReferrals" });
   User.belongsTo(User, { foreignKey: "referred_by_id", as: "invitedUser" });
+
+  subscriptions.hasOne(User, { foreignKey: "sub_id", as: "user" });
+  User.belongsTo(subscriptions, { foreignKey: "sub_id", as: "Sub" });
 }
 export const models = [User, plans, pricingConfig, Setting, subscriptions, BalanceTransaction];

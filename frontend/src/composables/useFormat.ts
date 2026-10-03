@@ -20,5 +20,15 @@ export function useFormat() {
 
     return `${count} ${forms[pr.select(count)]}`;
   }
-  return { formatDevices, formatMonths };
+  function formatDays(count: number) {
+    const pr = new Intl.PluralRules("ru-RU");
+    const forms: any = {
+      one: "день",
+      few: "дня",
+      many: "дней",
+    };
+
+    return `${count} ${forms[pr.select(count)]}`;
+  }
+  return { formatDevices, formatMonths, formatDays };
 }
