@@ -11,5 +11,14 @@ export default function SubApi() {
       return null;
     }
   }
-  return { getSubInfoCurrentUser };
+  async function getSubTrials(): Promise<InfoCurrentUserSubResponse | null> {
+    try {
+      const { data } = await $api.get<InfoCurrentUserSubResponse>("/sub/trials");
+      return data;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+  return { getSubInfoCurrentUser, getSubTrials };
 }

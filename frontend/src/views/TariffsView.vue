@@ -4,9 +4,11 @@ import type { DataPlans, DataPricing } from "@/app/types/plans.types";
 import { onMounted, ref } from "vue";
 import $api from "@/app/api/axios";
 import PlanBuilderWidget from "@/widgets/plans/planBuilder.widget.vue";
+import ModalWindow from "@/shared/ui/modalWindow.vue";
 
 const allPlans = ref<DataPlans[] | null>(null);
 const pricing = ref<DataPricing | null>(null);
+const isOpenModal = ref(true);
 
 onMounted(async () => {
   allPlans.value = await getPlans();
@@ -42,6 +44,20 @@ async function getPricing(): Promise<DataPricing | null> {
       <h2 class="title-with-lines">Создай свою визу</h2>
       <PlanBuilderWidget :data="pricing" class="mt-10" />
     </section>
+    <ModalWindow v-model:open="isOpenModal">
+      <div class="tariffs__warn">
+        <h3>Внимание</h3>
+
+        <p>При покупке новой подписки текущая подписка будет аннулирована.</p>
+        <ul>
+          <li><span>Готовая подписка</span> — параметры фиксированы и не могут быть изменены после покупки.</li>
+          <li>
+            <span>Кастомная подписка</span> — параметры настраиваются вами. В дальнейшем их можно изменить без
+            перевыпуска подписки
+          </li>
+        </ul>
+      </div>
+    </ModalWindow>
   </main>
 </template>
 
@@ -76,5 +92,28 @@ async function getPricing(): Promise<DataPricing | null> {
 }
 .planBuilder {
   margin-top: 18px;
+}
+
+.tariffs__warn > h3 {
+  margin-bottom: 20px;
+  color: var(--c-accent);
+  font-size: 20px;
+}
+.tariffs__warn {
+  font-size: 16px;
+}
+.tariffs__warn > p {
+  font-size: 15px;
+  text-align: start;
+  margin-bottom: 15px;
+}
+.tariffs__warn > ul {
+  text-align: start;
+}
+.tariffs__warn > ul li {
+  margin-bottom: 10px;
+}
+.tariffs__warn > ul > li > span {
+  color: var(--c-accent);
 }
 </style>

@@ -3,12 +3,15 @@ import SubApi from "@/app/api/sub.api";
 import type { InfoCurrentUserSubResponse } from "@/app/types/sub.types";
 import { useFormat } from "@/composables/useFormat";
 import PrintSubIcon from "@/shared/icons/printSubIcon.vue";
-import Button from "@/shared/ui/button.vue";
+import ModalWindow from "@/shared/ui/modalWindow.vue";
 import UiCard from "@/shared/ui/ui.card.vue";
 import { computed, onMounted, ref } from "vue";
 
-const { getSubInfoCurrentUser } = SubApi();
+const { getSubInfoCurrentUser, getSubTrials } = SubApi();
 const { formatDays } = useFormat();
+
+const modalWindow = ref(false);
+
 const SubInfo = ref<InfoCurrentUserSubResponse | null>(null);
 const isLoading = ref(true);
 
@@ -19,8 +22,19 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
+
+async function trials() {
+  try {
+    isLoading.value = true;
+    SubInfo.value = await getSubTrials();
+    SubInfo.value = await getSubInfoCurrentUser();
+  } finally {
+    isLoading.value = false;
+  }
+}
+
 const sub = computed(() => SubInfo.value?.Sub ?? null);
-const planID = computed(() => sub.value?.id ?? null);
+const subID = computed(() => sub.value?.id ?? null);
 const subStatus = computed(() => sub.value?.status === "active");
 const strStatusSub = computed(() => (subStatus.value ? "Транзит активен" : "Транзит неактивен"));
 const subExpires_at = computed(() => (sub.value ? new Date(sub.value.expires_at) : null));
@@ -35,33 +49,59 @@ const subLeftDays = computed(() => {
 
 <template>
   <UiCard class="bg">
-    <div v-if="!isLoading" class="subInfo">
-      <header class="subInfo-header">
-        <div class="content">
-          <h2>ПРОПУСК · ID. {{ planID }}</h2>
-          <h3 :class="{ redColoer: !subStatus }" class="statusSub">{{ strStatusSub }}</h3>
-        </div>
-        <PrintSubIcon :is-active="subStatus" />
-      </header>
-      <main>
-        <ul class="sub__deadlinesInfo">
-          <li class="left">
-            Осталось<span :class="{ redColoer: subLeftDays == 0 }">{{ formatDays(subLeftDays) }}</span>
-          </li>
-          <li class="validUntil">
-            Действует до<span>{{ subValidUntil }}</span>
-          </li>
-        </ul>
-      </main>
-      <footer class="subInfo-footer">
-        <button class="button__detailed">Подробнее</button>
-      </footer>
+    <div v-if="!isLoading">
+      <div v-if="sub" class="subInfo">
+        <header class="subInfo-header">
+          <div class="content">
+            <h2>ПРОПУСК · ID. {{ subID }}</h2>
+            <h3 :class="{ redColoer: !subStatus }" class="statusSub">{{ strStatusSub }}</h3>
+          </div>
+          <PrintSubIcon :is-active="subStatus" />
+        </header>
+        <main>
+          <ul class="sub__deadlinesInfo">
+            <li class="left">
+              Осталось<span :class="{ redColoer: subLeftDays == 0 }">{{ formatDays(subLeftDays) }}</span>
+            </li>
+            <li class="validUntil">
+              Действует до<span>{{ subValidUntil }}</span>
+            </li>
+          </ul>
+        </main>
+        <footer class="subInfo-footer">
+          <button @click="modalWindow = true" class="button__detailed">Подробнее</button>
+          <ModalWindow @update:open="(d) => (modalWindow = d)" :open="modalWindow">dawdawd</ModalWindow>
+        </footer>
+      </div>
+      <div v-else class="isNoSub">
+        <h2>У вас пока нет транзита</h2>
+        <h4>Вам доступен тестовый период на 3 дня.</h4>
+        <button @click="trials" class="button__trialPeriod">Активировать</button>
+      </div>
     </div>
-    <div class="load" v-else>Загрузка</div>
+    <div class="load" v-else>Загрузка...</div>
   </UiCard>
 </template>
 
 <style scoped>
+.load {
+  text-align: center;
+  padding-bottom: 15px;
+}
+.isNoSub > h2 {
+  color: white;
+  margin-bottom: 10px;
+}
+.button__trialPeriod {
+  padding: 12px 0;
+  margin-top: 10px;
+  width: 100%;
+  background-color: transparent;
+  color: var(--c-accent);
+  font-family: "JetBrains Mono";
+  font-size: 14px;
+  cursor: pointer;
+}
 .bg {
   border-radius: 17px;
   font-family: "JetBrains Mono";
@@ -116,6 +156,7 @@ const subLeftDays = computed(() => {
   color: var(--c-main-text);
   font-family: "JetBrains Mono";
   font-size: 14px;
+  cursor: pointer;
 }
 .redColoer {
   color: var(--c-error) !important;

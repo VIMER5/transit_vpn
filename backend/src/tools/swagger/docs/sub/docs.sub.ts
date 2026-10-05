@@ -35,4 +35,75 @@ export const SubPaths = {
       },
     },
   },
+  "/api/sub/trials": {
+    get: {
+      summary: "Получить пробный период",
+      tags: ["Sub"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/SubInfo" },
+            },
+          },
+        },
+        403: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/sub/purchase": {
+    post: {
+      summary: "Покупка подписки",
+      tags: ["Sub"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/subPurchaseRequest" },
+          },
+        },
+      },
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/fullSubInfo" },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+      },
+    },
+  },
 };

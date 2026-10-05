@@ -39,4 +39,61 @@ export const Sub_schema = {
       },
     },
   },
+  fullSubInfo: {
+    allOf: [
+      { $ref: "#/components/schemas/SubInfo" },
+      {
+        type: "object",
+        properties: {
+          plan_id: {
+            type: "number",
+            description: "ID плана, от которого получили подписку.",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+    ],
+  },
+  subPurchaseRequest: {
+    oneOf: [
+      {
+        type: "object",
+        description: "Вариант 1: Покупка по ID плана",
+        properties: {
+          planId: {
+            type: "string",
+            description: "ID плана",
+          },
+        },
+        required: ["planId"],
+      },
+      {
+        type: "object",
+        description: "Вариант 2: Покупка с произвольными параметрами",
+        properties: {
+          custom: {
+            type: "object",
+            properties: {
+              deviceCount: {
+                type: "number",
+                description: "Кол-во устройств в подписке",
+              },
+              durationMonths: {
+                type: "number",
+                description: "На сколько месяцев купить.",
+              },
+            },
+          },
+        },
+        required: ["custom"],
+      },
+    ],
+  },
 };

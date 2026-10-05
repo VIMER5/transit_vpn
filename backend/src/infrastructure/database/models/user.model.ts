@@ -12,6 +12,7 @@ export class User extends Model {
   declare status: "active" | "banned";
   declare balance: number;
   declare sub_id: number;
+  declare trial_period: boolean;
   declare Sub?: NonAttribute<subscriptions>;
 
   static initModel(sequelize: Sequelize) {
@@ -31,6 +32,7 @@ export class User extends Model {
         status: { type: DataTypes.ENUM("active", "banned"), allowNull: false, defaultValue: "active" },
         balance: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
         sub_id: { type: DataTypes.INTEGER, allowNull: true },
+        trial_period: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
       },
       { sequelize: sequelize, tableName: "users" },
     );

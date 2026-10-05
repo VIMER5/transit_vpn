@@ -65,6 +65,38 @@ class subService {
     if (!subUser) throw userError.userNotFound();
     return subUser;
   }
+  async trials(userId: bigint) {
+    return db.transaction(async (t) => {
+      const user = await User.findByPk(userId, {
+        transaction: t,
+        lock: t.LOCK.UPDATE,
+        attributes: ["id", "trial_period", "sub_id"],
+      });
+      if (!user) throw userError.userNotFound();
+      if (user.trial_period) throw SubError.subForbidden();
+
+      const existing = await subscriptions.findByPk(user.sub_id, { transaction: t });
+      const newExpiresAt = new Date();
+      newExpiresAt.setDate(newExpiresAt.getDate() + 3);
+
+      const subData = {
+        plan_id: null,
+        plan_title: "trials",
+        device_limit: 1,
+        price_paid_kopecks: 0,
+        expires_at: newExpiresAt,
+        status: "active",
+      };
+      let subscription;
+      if (existing) {
+        subscription = await existing.update(subData, { transaction: t });
+      } else {
+        subscription = await subscriptions.create(subData, { transaction: t });
+        await user.update({ sub_id: subscription.id, trial_period: true }, { transaction: t });
+      }
+      return subscription;
+    });
+  }
   private async resolvePrice(input: PurchaseInput) {
     if (input.planId) {
       const plan = await plansService.getPublicTariffPlansByID(input.planId);

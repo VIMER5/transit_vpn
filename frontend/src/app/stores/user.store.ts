@@ -29,6 +29,7 @@ export const useUserStore = defineStore("UserStore", () => {
     if (!profile.value) return "";
     return `@${profile.value.username}`.trim();
   });
+  const referral_code = computed(() => profile.value?.referral_code ?? "-");
   const balanceInRUB = computed(() => {
     if (!profile.value) return 0;
     return profile.value.balance / 100;
@@ -42,5 +43,15 @@ export const useUserStore = defineStore("UserStore", () => {
     return profile.value.photo_url ?? "https://i.pinimg.com/736x/c3/ba/8e/c3ba8ef6ef692b84ad2b20eddcbe41f4.jpg";
   });
 
-  return { profile, userFullName, username, balanceSrt, balanceInRUB, photoUrl, fetchUserProfile, fetch };
+  return {
+    profile,
+    userFullName,
+    username,
+    balanceSrt,
+    balanceInRUB,
+    photoUrl,
+    referral_code,
+    fetchUserProfile,
+    fetch,
+  };
 });

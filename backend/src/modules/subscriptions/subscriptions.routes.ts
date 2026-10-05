@@ -7,5 +7,6 @@ const subscriptionsApi = express.Router();
 subscriptionsApi.get("/", subController.getCurrentSub);
 
 subscriptionsApi.post("/purchase", validation(purchaseRequestSchema), subController.purchase);
+subscriptionsApi.get("/trials", subController.trials);
 
 export default subscriptionsApi;

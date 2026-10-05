@@ -4,11 +4,13 @@ import UiCard from "@/shared/ui/ui.card.vue";
 import Button from "@/shared/ui/button.vue";
 import { useCurrency } from "@/composables/useCurrency";
 import { useFormat } from "@/composables/useFormat";
+
 const { kopecksInRUB } = useCurrency();
 const { formatDevices, formatMonths } = useFormat();
 defineProps<{
   data: DataPlans;
 }>();
+defineEmits(["select"]);
 </script>
 
 <template>
@@ -24,7 +26,7 @@ defineProps<{
           <div class="monthlyPayment">{{ kopecksInRUB(data.price_kopecks / data.duration_months) }} ₽ / мес</div>
         </main>
         <footer class="plans__card__content-footer">
-          <Button class="buttonOrder" :class="{ accentButton: data.accent }">Оформить</Button>
+          <Button class="buttonOrder" @click="$emit('select')" :class="{ accentButton: data.accent }">Оформить</Button>
         </footer>
       </div>
     </UiCard>
