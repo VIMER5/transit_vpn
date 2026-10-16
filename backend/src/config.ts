@@ -20,6 +20,7 @@ const envVarsSchema = Joi.object({
     }),
 
   domainWeb: Joi.string().required(),
+  domainServer: Joi.string().required(),
 
   db_DataBaseName: Joi.string().required(),
   db_host: Joi.string().required(),
@@ -47,6 +48,7 @@ export const config = {
   },
   domain: {
     domainWeb: envVars.domainWeb,
+    domainServer: envVars.domainServer,
   },
   tg: {
     botToken: envVars.botTgToken,

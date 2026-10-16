@@ -5,8 +5,12 @@ import IconPanel from "@/shared/ui/icon.panel.vue";
 import uiCard from "@/shared/ui/ui.card.vue";
 
 import { useUserStore } from "@/app/stores/user.store";
+import { onMounted } from "vue";
 
 const userStor = useUserStore();
+onMounted(async () => {
+  await userStor.updateBalance();
+});
 </script>
 
 <template>

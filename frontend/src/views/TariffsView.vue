@@ -85,7 +85,8 @@ async function getPricing(): Promise<DataPricing | null> {
 .title-with-lines::after {
   content: "";
   flex: 1;
-  border-bottom: 1.5px dashed var(--c-line);
+  height: 1px;
+  background-image: repeating-linear-gradient(90deg, var(--c-line) 0 6px, transparent 6px 12px);
 }
 .mt-10 {
   margin-top: 10px;

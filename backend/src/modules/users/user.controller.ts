@@ -12,6 +12,15 @@ class UserController {
       next(e);
     }
   }
+  async getUserBalance(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const data = await userService.getUserBalanceByID(req.userId!);
+      if (!data) throw userError.userNotFound();
+      res.status(200).json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
   async getRefInfo(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const data = await userService.getUserReferralStatistics(req.userId!);

@@ -97,6 +97,10 @@ class subService {
       return subscription;
     });
   }
+  async getSubByUuid(uuid: string) {
+    const data = await subscriptions.findOne({ where: { sub_uuid: uuid } });
+    return data;
+  }
   private async resolvePrice(input: PurchaseInput) {
     if (input.planId) {
       const plan = await plansService.getPublicTariffPlansByID(input.planId);

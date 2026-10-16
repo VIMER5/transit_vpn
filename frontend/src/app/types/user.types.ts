@@ -18,3 +18,7 @@ export interface UserReferralStatistics {
   sumReferralsBonus: number;
   url: string;
 }
+export interface UserBalance {
+  id: string;
+  balance: number;
+}

@@ -49,6 +49,10 @@ export const Sub_schema = {
             type: "number",
             description: "ID плана, от которого получили подписку.",
           },
+          price_paid_kopecks: {
+            type: "number",
+            description: "Цена покупки",
+          },
           updatedAt: {
             type: "string",
             format: "date-time",

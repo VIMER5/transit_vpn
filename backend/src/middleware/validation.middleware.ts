@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectSchema } from "joi";
 import { AppError } from "../shared/errors/app.error.js";
+import { sendBrowserNotFound } from "../shared/pages/notFound.js";
 
-export default function validation(schema: ObjectSchema, source: source = "body") {
+export default function validation(schema: ObjectSchema, source: source = "body", returnNotFound: boolean = false) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req[source]) {
       next(new AppError("validation_failed", 400, `${source} обязательный`));
@@ -12,7 +13,8 @@ export default function validation(schema: ObjectSchema, source: source = "body"
       stripUnknown: true,
     });
     if (error) {
-      next(new AppError("validation_failed", 400, error.message));
+      if (!returnNotFound) next(new AppError("validation_failed", 400, error.message));
+      else sendBrowserNotFound(res);
     }
     req[source] = value;
     next();

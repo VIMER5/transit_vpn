@@ -53,6 +53,11 @@ class UserService {
       url: `https://t.me/${useTgBot ? useTgBot.value : null}?start=ref_${referral_code}`,
     };
   }
+  async getUserBalanceByID(userID: bigint) {
+    return await User.findByPk(userID, {
+      attributes: ["balance", "id"],
+    });
+  }
 
   private async CreateReferralCode(length = 10): Promise<string> {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

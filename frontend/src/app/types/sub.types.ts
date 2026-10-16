@@ -11,3 +11,10 @@ export interface subInfo {
   expires_at: string;
   status: "active" | "expired";
 }
+
+export interface fullSubInfo extends subInfo {
+  plan_id: number | null;
+  price_paid_kopecks: number;
+  updatedAt: string;
+  createdAt: string;
+}

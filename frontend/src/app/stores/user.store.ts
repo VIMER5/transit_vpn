@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import $api from "@/app/api/axios";
-import type { UserProfile } from "@/app/types/user.types";
+import type { UserProfile, UserBalance } from "@/app/types/user.types";
 export const useUserStore = defineStore("UserStore", () => {
   const profile = ref<UserProfile | null>(null);
   const isProfileLoading = ref(false);
@@ -20,7 +20,18 @@ export const useUserStore = defineStore("UserStore", () => {
     const { data } = await $api.get<UserProfile>("/users");
     profile.value = data;
   }
-
+  async function updateBalance() {
+    try {
+      if (!profile.value) {
+        await fetch();
+      } else {
+        const { data } = await $api.get<UserBalance>("/users/balance");
+        profile.value.balance = data.balance;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
   const userFullName = computed(() => {
     if (!profile.value) return "";
     return `${profile.value.first_name} ${profile.value.last_name}`.trim();
@@ -53,5 +64,6 @@ export const useUserStore = defineStore("UserStore", () => {
     referral_code,
     fetchUserProfile,
     fetch,
+    updateBalance,
   };
 });

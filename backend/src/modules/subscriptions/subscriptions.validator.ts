@@ -7,3 +7,10 @@ export const purchaseRequestSchema = Joi.object({
     durationMonths: Joi.number().integer().min(1).required(),
   }),
 }).xor("planId", "custom");
+
+export const ParamsUUIDSchema = Joi.object({
+  sub_uuid: Joi.string().guid({
+    version: ["uuidv4"],
+    wrapper: false,
+  }),
+});

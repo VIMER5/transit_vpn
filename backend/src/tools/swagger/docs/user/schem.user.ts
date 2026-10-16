@@ -1,4 +1,17 @@
 export const user_schema = {
+  BalanceUserResponse: {
+    type: "object",
+    properties: {
+      id: {
+        type: "string",
+        description: "bigInt",
+      },
+      balance: {
+        type: "number",
+        description: "баланс пользователя(в копейках)",
+      },
+    },
+  },
   CurrentUserInfoResponse: {
     type: "object",
     properties: {
@@ -49,6 +62,7 @@ export const user_schema = {
       },
     },
   },
+
   CurrentStatisticsUserReferral: {
     type: "object",
     properties: {
