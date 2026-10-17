@@ -30,6 +30,9 @@ const envVarsSchema = Joi.object({
 
   token_accessSecretKey: Joi.string().required(),
   ttl_ACCESS_TOKEN: Joi.number().default(86400),
+
+  API_token_panel: Joi.string().required(),
+  URL_panel: Joi.string().required(),
 })
   .unknown()
   .required();
@@ -64,5 +67,9 @@ export const config = {
   jwt: {
     accessSecretKey: envVars.token_accessSecretKey,
     ttl_ACCESS: envVars.ttl_ACCESS_TOKEN,
+  },
+  panel: {
+    API_token_panel: envVars.API_token_panel,
+    URL_panel: envVars.URL_panel,
   },
 };
