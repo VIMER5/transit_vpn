@@ -35,6 +35,78 @@ export const SubPaths = {
       },
     },
   },
+  "/api/sub/device/": {
+    get: {
+      summary: "Получить информацию об устройствах текущего пользователя.",
+      tags: ["Sub"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/InfoDeviceInSubResponse" },
+            },
+          },
+        },
+        404: {
+          description: "что-то не найдено",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/sub/device/limits": {
+    get: {
+      summary: "Получить информацию об лимитах устройств текущего пользователя.",
+      tags: ["Sub"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/deviceLimitsResponse" },
+            },
+          },
+        },
+        404: {
+          description: "что-то не найдено",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+      },
+    },
+  },
   "/api/sub/trials": {
     get: {
       summary: "Получить пробный период",

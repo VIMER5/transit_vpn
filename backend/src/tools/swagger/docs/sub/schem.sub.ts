@@ -1,4 +1,42 @@
 export const Sub_schema = {
+  DeviceInfo: {
+    type: "object",
+    properties: {
+      id: {
+        type: "string",
+      },
+      agent: {
+        type: "string",
+        enum: ["INCY", "Happ"],
+      },
+      deviceName: {
+        type: "string",
+      },
+      os: {
+        type: "string",
+      },
+      createdAt: {
+        format: "date-time",
+      },
+    },
+  },
+  deviceLimitsResponse: {
+    type: "object",
+    properties: {
+      deviceLimitSub: {
+        type: "number",
+      },
+      countDivice: {
+        type: "number",
+      },
+    },
+  },
+  InfoDeviceInSubResponse: {
+    type: "array",
+    items: {
+      $ref: "#/components/schemas/DeviceInfo",
+    },
+  },
   InfoCurrentUserSubResponse: {
     type: "object",
     properties: {

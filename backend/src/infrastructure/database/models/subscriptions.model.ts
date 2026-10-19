@@ -1,4 +1,5 @@
-import { Model, Sequelize, DataTypes } from "sequelize";
+import { Model, Sequelize, DataTypes, NonAttribute } from "sequelize";
+import { subDevice } from "./subDevice.model.js";
 
 export class subscriptions extends Model {
   declare id: number;
@@ -11,6 +12,7 @@ export class subscriptions extends Model {
   declare status: "active" | "expired";
   declare expiry_handled_at: Date | null;
   declare notified_3d_at: Date | null;
+  declare devices?: NonAttribute<subDevice[]>;
 
   static initModel(sequelize: Sequelize) {
     subscriptions.init(

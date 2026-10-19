@@ -7,6 +7,9 @@ class SubError {
   static subForbidden() {
     return new AppError("sub_Forbidden", 403, "У вас нет доступа к этой подписке");
   }
+  static subNotFound() {
+    return new AppError("sub_NotFound", 404, "У вас нет подписки");
+  }
 }
 
 export default SubError;

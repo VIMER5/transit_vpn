@@ -24,7 +24,9 @@ class GlobalFunctionBot {
   }
   async notify(chat_id: string, text: string) {
     await bot.api
-      .sendMessage(chat_id, text)
+      .sendMessage(chat_id, text, {
+        parse_mode: "HTML",
+      })
       .catch((err) => console.error(`Не удалось отправить уведомление в чат ТГ ${chat_id}:`, err));
   }
 }

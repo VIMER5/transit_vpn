@@ -18,3 +18,16 @@ export interface fullSubInfo extends subInfo {
   updatedAt: string;
   createdAt: string;
 }
+
+export interface deviceLimits {
+  deviceLimitSub: number;
+  countDivice: number;
+}
+
+export interface deviceList {
+  id: number;
+  agent: "INCY" | "Happ";
+  deviceName: string;
+  os: string;
+  createdAt: string;
+}

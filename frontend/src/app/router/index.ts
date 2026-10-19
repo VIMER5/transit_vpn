@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import TariffsView from "@/views/TariffsView.vue";
 import ProfileLayout from "@/app//layout/profile.layout.vue";
+import DeviceView from "@/views/deviceView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +26,7 @@ const router = createRouter({
         {
           path: "devices",
           name: "devices",
-          component: import("../../views/AboutView.vue"),
+          component: DeviceView,
         },
         {
           path: "profile",
