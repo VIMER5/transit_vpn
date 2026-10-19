@@ -14,7 +14,7 @@ export default function validation(schema: ObjectSchema, source: source = "body"
     });
     if (error) {
       if (!returnNotFound) next(new AppError("validation_failed", 400, error.message));
-      else sendBrowserNotFound(res);
+      else return sendBrowserNotFound(res);
     }
     req[source] = value;
     next();

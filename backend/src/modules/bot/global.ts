@@ -1,5 +1,5 @@
 import { InlineKeyboard } from "grammy";
-import { BotContext } from "../../infrastructure/telegram/bot.js";
+import bot, { BotContext } from "../../infrastructure/telegram/bot.js";
 import { getSetting } from "../../settings.js";
 
 interface dataSender {
@@ -21,6 +21,11 @@ class GlobalFunctionBot {
         parse_mode: "HTML",
         reply_markup: keyboard,
       });
+  }
+  async notify(chat_id: string, text: string) {
+    await bot.api
+      .sendMessage(chat_id, text)
+      .catch((err) => console.error(`Не удалось отправить уведомление в чат ТГ ${chat_id}:`, err));
   }
 }
 

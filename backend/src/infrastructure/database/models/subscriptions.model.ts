@@ -9,6 +9,8 @@ export class subscriptions extends Model {
   declare price_paid_kopecks: number;
   declare expires_at: Date;
   declare status: "active" | "expired";
+  declare expiry_handled_at: Date | null;
+  declare notified_3d_at: Date | null;
 
   static initModel(sequelize: Sequelize) {
     subscriptions.init(
@@ -21,6 +23,8 @@ export class subscriptions extends Model {
         price_paid_kopecks: { type: DataTypes.INTEGER, allowNull: false },
         expires_at: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
         status: { type: DataTypes.ENUM("active", "expired"), allowNull: false, defaultValue: "active" },
+        expiry_handled_at: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
+        notified_3d_at: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
       },
       {
         sequelize: sequelize,

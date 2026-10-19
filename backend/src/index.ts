@@ -10,6 +10,7 @@ import { setupSwagger } from "./tools/swagger/swagger.js";
 import { printServerStarted } from "./tools/nameplate/nameplate.js";
 import bot from "./infrastructure/telegram/bot.js";
 import { initBotHandlers } from "./modules/bot/index.js";
+import { startSubscriptionJobs } from "./jobs/subscription.jobs.js";
 
 initBotHandlers();
 bot.start({
@@ -28,7 +29,7 @@ app.use(router);
 app.use(errorMiddleware);
 
 await connection();
-
+startSubscriptionJobs();
 app.listen(config.server.port, config.server.IP, () => {
   printServerStarted(startTime);
   if (config.isDev) {
