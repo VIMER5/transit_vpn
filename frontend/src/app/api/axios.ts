@@ -1,5 +1,6 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { useAuthStore } from "@/app/stores/auth.store";
+import type { serverError } from "../types/global.types";
 const { VITE_BASE_URL_SERVER } = import.meta.env;
 
 const $api = axios.create({
@@ -15,5 +16,7 @@ $api.interceptors.request.use((conf) => {
   conf.headers.Authorization = `Bearer ${authStore.token}`;
   return conf;
 });
-
+export function isServerError(data: any): data is serverError {
+  return data && typeof data === "object" && "message" in data && "code" in data;
+}
 export default $api;

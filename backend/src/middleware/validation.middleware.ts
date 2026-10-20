@@ -13,7 +13,7 @@ export default function validation(schema: ObjectSchema, source: source = "body"
       stripUnknown: true,
     });
     if (error) {
-      if (!returnNotFound) next(new AppError("validation_failed", 400, error.message));
+      if (!returnNotFound) return next(new AppError("validation_failed", 400, error.message));
       else return sendBrowserNotFound(res);
     }
     req[source] = value;

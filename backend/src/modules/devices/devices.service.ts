@@ -2,6 +2,7 @@ import { db } from "../../infrastructure/database/index.js";
 import { subDevice } from "../../infrastructure/database/models/subDevice.model.js";
 import { subscriptions } from "../../infrastructure/database/models/subscriptions.model.js";
 import { User } from "../../infrastructure/database/models/user.model.js";
+import DeviceError from "../../shared/errors/device.error.js";
 import SubError from "../../shared/errors/sub.error.js";
 import userError from "../../shared/errors/user.error.js";
 import { clientType } from "../../shared/types/subscriptions.type.js";
@@ -71,6 +72,17 @@ class devicesService {
       );
       return "ok";
     });
+  }
+  async delDevice(userId: bigint, deviceId: number) {
+    const user = await User.findByPk(userId, {
+      attributes: ["id", "sub_id"],
+    });
+    if (!user) throw userError.userNotFound();
+
+    const device = await subDevice.findOne({ where: { sub_id: user.sub_id, id: deviceId } });
+    if (!device) throw DeviceError.DeviceForbidden();
+    await device.destroy();
+    return true;
   }
 }
 

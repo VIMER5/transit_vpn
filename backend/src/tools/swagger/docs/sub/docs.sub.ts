@@ -107,6 +107,57 @@ export const SubPaths = {
       },
     },
   },
+  "/api/sub/device/deauthorize": {
+    delete: {
+      summary: "Удалить устройство из подписки по ID",
+      tags: ["Sub"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                deviceId: {
+                  type: "number",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              schema: { type: "boolean" },
+            },
+          },
+        },
+        404: {
+          description: "что-то не найдено",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+      },
+    },
+  },
   "/api/sub/trials": {
     get: {
       summary: "Получить пробный период",

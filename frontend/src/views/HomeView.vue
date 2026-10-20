@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BlockWithMoneyWidget from "@/widgets/money/blockWithMoney.widget.vue";
 import BlockSubInfoWidget from "@/widgets/users/blockSubInfo.widget.vue";
+import MiniDeviceWidget from "@/widgets/users/miniDevice.widget.vue";
 import MiniReferralPanelWidget from "@/widgets/users/miniReferralPanel.widget.vue";
 </script>
 
@@ -9,7 +10,7 @@ import MiniReferralPanelWidget from "@/widgets/users/miniReferralPanel.widget.vu
     <BlockSubInfoWidget class="subWidget" />
     <BlockWithMoneyWidget />
     <section class="MiniWidget">
-      <MiniReferralPanelWidget />
+      <MiniDeviceWidget />
       <MiniReferralPanelWidget />
     </section>
   </main>

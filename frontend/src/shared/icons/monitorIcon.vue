@@ -1,0 +1,17 @@
+<script setup lang="ts"></script>
+
+<template>
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M3.66671 2.75H18.3334C19.3459 2.75 20.1667 3.57081 20.1667 4.58333V13.75C20.1667 14.7625 19.3459 15.5833 18.3334 15.5833H3.66671C2.65419 15.5833 1.83337 14.7625 1.83337 13.75V4.58333C1.83337 3.57081 2.65419 2.75 3.66671 2.75Z"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke="black"
+    />
+    <path d="M7.33337 19.25H14.6667" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="black" />
+    <path d="M11 15.5833V19.25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="black" />
+  </svg>
+</template>
+
+<style scoped></style>

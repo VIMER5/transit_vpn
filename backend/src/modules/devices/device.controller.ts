@@ -19,6 +19,14 @@ class deviceController {
       next(e);
     }
   }
+  async userDeleteDevice(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const data = await devicesService.delDevice(req.userId!, req.body.deviceId);
+      res.status(200).json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new deviceController();

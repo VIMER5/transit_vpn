@@ -3,17 +3,35 @@ import $api from "@/app/api/axios";
 import { purchaseRequestSchema } from "@/app/api/validator/subscriptions.validator";
 import { useNotificationStore } from "@/app/stores/notification.store";
 import { AxiosError } from "axios";
+import type { serverError } from "../types/global.types";
 export default function SubApi() {
-  async function getDeviceLimit(): Promise<deviceLimits | null> {
+  async function deauthorizeDevice(deviceId: number) {
+    const notificationStore = useNotificationStore();
+    try {
+      const { data } = await $api.delete<boolean>("/sub/device/deauthorize", {
+        data: {
+          deviceId: deviceId,
+        },
+      });
+      if (data) notificationStore.setNotification("Успешно", "--c-done");
+    } catch (e) {
+      console.log(e);
+      if (e instanceof AxiosError && e.response && e.response.data.error) {
+        notificationStore.setNotification(e.response.data.error.message, "--c-error");
+      } else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
+    }
+  }
+  async function getDeviceLimit(): Promise<deviceLimits | serverError | null> {
     const notificationStore = useNotificationStore();
     try {
       const { data } = await $api.get<deviceLimits>("/sub/device/limits");
       return data;
     } catch (e) {
       console.log(e);
-      if (e instanceof AxiosError && e.response && e.response.data.error)
-        notificationStore.setNotification(e.response.data.error.message, "--c-error");
-      else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
+      if (e instanceof AxiosError && e.response && e.response.data.error) {
+        const serverError: serverError = e.response.data.error as serverError;
+        return serverError;
+      } else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
       return null;
     }
   }
@@ -79,5 +97,5 @@ export default function SubApi() {
       return null;
     }
   }
-  return { getSubInfoCurrentUser, getSubTrials, purchaseSub, getDeviceLimit, getdeviceList };
+  return { getSubInfoCurrentUser, getSubTrials, purchaseSub, getDeviceLimit, getdeviceList, deauthorizeDevice };
 }
