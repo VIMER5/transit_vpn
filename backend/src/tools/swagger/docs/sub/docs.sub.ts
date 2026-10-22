@@ -214,7 +214,7 @@ export const SubPaths = {
         200: {
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/fullSubInfo" },
+              schema: { $ref: "#/components/schemas/SubInfo" },
             },
           },
         },

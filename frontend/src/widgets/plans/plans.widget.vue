@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DataPlans } from "@/app/types/plans.types";
-import PlansCard from "@/shared/ui/plans.card.vue";
+// import PlansCard from "@/shared/ui/plans.card.vue";
 import ModalWindow from "@/shared/ui/modalWindow.vue";
 import { ref, computed } from "vue";
 import { useFormat } from "@/composables/useFormat";

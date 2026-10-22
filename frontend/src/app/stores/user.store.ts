@@ -45,6 +45,7 @@ export const useUserStore = defineStore("UserStore", () => {
     if (!profile.value) return 0;
     return profile.value.balance / 100;
   });
+  const balanceInKopecks = computed(() => profile.value?.balance ?? 0);
   const balanceSrt = computed(() => {
     if (!profile.value) return "";
     return Number(balanceInRUB.value).toLocaleString("de-DE") ?? balanceInRUB.value;
@@ -60,6 +61,7 @@ export const useUserStore = defineStore("UserStore", () => {
     username,
     balanceSrt,
     balanceInRUB,
+    balanceInKopecks,
     photoUrl,
     referral_code,
     fetchUserProfile,

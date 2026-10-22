@@ -59,13 +59,17 @@ export const Sub_schema = {
         type: "string",
         description: "UUID подписки",
       },
-      plan_title: {
-        type: "string",
-        description: "Название подписки",
-      },
       device_limit: {
         type: "number",
         description: "Кол-во устройств в подписке",
+      },
+      price_paid_kopecks: {
+        type: "number",
+        description: "Цена покупки",
+      },
+      discount: {
+        type: "number",
+        description: "Скидка при покупки",
       },
       expires_at: {
         type: "string",
@@ -75,67 +79,34 @@ export const Sub_schema = {
         type: "string",
         enum: ["active", "expired"],
       },
+      updatedAt: {
+        type: "string",
+        format: "date-time",
+      },
+      createdAt: {
+        type: "string",
+        format: "date-time",
+      },
     },
   },
-  fullSubInfo: {
-    allOf: [
-      { $ref: "#/components/schemas/SubInfo" },
-      {
-        type: "object",
-        properties: {
-          plan_id: {
-            type: "number",
-            description: "ID плана, от которого получили подписку.",
-          },
-          price_paid_kopecks: {
-            type: "number",
-            description: "Цена покупки",
-          },
-          updatedAt: {
-            type: "string",
-            format: "date-time",
-          },
-          createdAt: {
-            type: "string",
-            format: "date-time",
-          },
-        },
-      },
-    ],
-  },
   subPurchaseRequest: {
-    oneOf: [
-      {
+    type: "object",
+    description: "Покупка с произвольными параметрами",
+    properties: {
+      custom: {
         type: "object",
-        description: "Вариант 1: Покупка по ID плана",
         properties: {
-          planId: {
-            type: "string",
-            description: "ID плана",
+          deviceCount: {
+            type: "number",
+            description: "Кол-во устройств в подписке",
+          },
+          periodId: {
+            type: "number",
+            description: "ID периода подписки",
           },
         },
-        required: ["planId"],
       },
-      {
-        type: "object",
-        description: "Вариант 2: Покупка с произвольными параметрами",
-        properties: {
-          custom: {
-            type: "object",
-            properties: {
-              deviceCount: {
-                type: "number",
-                description: "Кол-во устройств в подписке",
-              },
-              durationMonths: {
-                type: "number",
-                description: "На сколько месяцев купить.",
-              },
-            },
-          },
-        },
-        required: ["custom"],
-      },
-    ],
+    },
+    required: ["custom"],
   },
 };

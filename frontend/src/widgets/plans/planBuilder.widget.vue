@@ -2,7 +2,7 @@
 import type { DataPricing } from "@/app/types/plans.types";
 import { useFormat } from "@/composables/useFormat";
 import { useCurrency } from "@/composables/useCurrency";
-import Button from "@/shared/ui/button.vue";
+import Button from "@/shared/ui/buttons/button.vue";
 import Range from "@/shared/ui/range.vue";
 import UiCard from "@/shared/ui/ui.card.vue";
 import { computed, ref } from "vue";

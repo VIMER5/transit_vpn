@@ -3,6 +3,8 @@ import { useTelegram } from "./useTelegram";
 import { useAuthStore } from "@/app/stores/auth.store";
 import { AxiosError } from "axios";
 import { useUserStore } from "@/app/stores/user.store";
+import { useAppStore } from "@/app/stores/app.store";
+import { useSubStore } from "@/app/stores/sub.store";
 const { VITE_INIT_DATA, VITE_NODE_ENV } = import.meta.env;
 
 export function initApp() {
@@ -17,8 +19,10 @@ export function initApp() {
       await authStore.login(VITE_NODE_ENV == "dev" && !initData ? VITE_INIT_DATA : initData);
 
       const userStore = useUserStore();
+      const appStore = useAppStore();
+      const subStore = useSubStore();
 
-      await Promise.all([userStore.fetch()]);
+      await Promise.all([userStore.fetch(), appStore.initAppStore(), subStore.initSubStore()]);
 
       status.value = "ready";
     } catch (e) {

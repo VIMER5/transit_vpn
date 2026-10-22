@@ -1,22 +1,14 @@
 import { plans } from "../../infrastructure/database/models/plans.model.js";
 import { pricingConfig } from "../../infrastructure/database/models/pricingConfig.model.js";
+import { subPeriods } from "../../infrastructure/database/models/subPeriods.model.js";
 import PlansError from "../../shared/errors/plans.error.js";
 
 class PlansService {
-  async getPublicTariffPlans() {
-    const data = await plans.findAll({
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-      where: { active: true },
-      order: [["price_kopecks", "ASC"]],
+  async getPeriods() {
+    const data = await subPeriods.findAll({
+      where: { is_active: true },
+      order: [["months", "ASC"]],
     });
-    return data;
-  }
-  async getPublicTariffPlansByID(id: number, isActive: boolean = true) {
-    const data = await plans.findOne({
-      where: { id, active: isActive },
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-    });
-    if (!data) throw PlansError.NotFound();
     return data;
   }
   async getPricing() {
@@ -24,7 +16,14 @@ class PlansService {
       where: { id: 1 },
       attributes: { exclude: ["createdAt", "updatedAt", "id"] },
     });
-    return data;
+    if (!data) return null;
+    const result = data.get({ plain: true });
+
+    const dataPeriods = await subPeriods.findAll({
+      where: { is_active: true },
+      order: [["months", "ASC"]],
+    });
+    return { ...result, SubPeriod: dataPeriods };
   }
 }
 

@@ -1,61 +1,25 @@
 <script setup lang="ts">
-import PlansWidget from "@/widgets/plans/plans.widget.vue";
-import type { DataPlans, DataPricing } from "@/app/types/plans.types";
 import { onMounted, ref } from "vue";
-import $api from "@/app/api/axios";
-import PlanBuilderWidget from "@/widgets/plans/planBuilder.widget.vue";
 import ModalWindow from "@/shared/ui/modalWindow.vue";
+import { useAppStore } from "@/app/stores/app.store";
+import SubBuilderWiget from "@/widgets/sub/subBuilder.wiget.vue";
 
-const allPlans = ref<DataPlans[] | null>(null);
-const pricing = ref<DataPricing | null>(null);
 const isOpenModal = ref(true);
+const appStore = useAppStore();
 
 onMounted(async () => {
-  allPlans.value = await getPlans();
-  pricing.value = await getPricing();
+  await appStore.fetchPricing();
 });
-
-async function getPlans(): Promise<DataPlans[] | null> {
-  try {
-    const { data } = await $api.get("/plans");
-    return data;
-  } catch (e) {
-    return null;
-  }
-}
-async function getPricing(): Promise<DataPricing | null> {
-  try {
-    const { data } = await $api.get("/plans/pricing");
-    return data;
-  } catch (e) {
-    return null;
-  }
-}
 </script>
 
 <template>
   <main class="tariffs__view">
-    <h1 class="h1">Выбери или создай свою визу!</h1>
-    <section class="plans">
-      <h2 class="title-with-lines">Готовые тарифы</h2>
-      <PlansWidget :data="allPlans" class="mt-10"></PlansWidget>
-    </section>
-    <section class="planBuilder">
-      <h2 class="title-with-lines">Создай свою визу</h2>
-      <PlanBuilderWidget :data="pricing" class="mt-10" />
-    </section>
+    <SubBuilderWiget :pricing="appStore.pricing" />
     <ModalWindow v-model:open="isOpenModal">
       <div class="tariffs__warn">
         <h3>Внимание</h3>
 
         <p>При покупке новой подписки текущая подписка будет аннулирована.</p>
-        <ul>
-          <li><span>Готовая подписка</span> — параметры фиксированы и не могут быть изменены после покупки.</li>
-          <li>
-            <span>Кастомная подписка</span> — параметры настраиваются вами. В дальнейшем их можно изменить без
-            перевыпуска подписки
-          </li>
-        </ul>
       </div>
     </ModalWindow>
   </main>

@@ -10,6 +10,7 @@ export interface UserProfile {
   status: "active" | "banned";
   balance: number;
   updatedAt: string;
+  trial_period: boolean;
 }
 
 export interface UserReferralStatistics {

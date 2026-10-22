@@ -2,46 +2,66 @@ import { subscriptions } from "../../infrastructure/database/models/subscription
 import { User } from "../../infrastructure/database/models/user.model.js";
 import SubError from "../../shared/errors/sub.error.js";
 import { PurchaseInput } from "../../shared/types/subscriptions.type.js";
-import plansService from "../plans/plans.service.js";
 import { db } from "../../infrastructure/database/index.js";
 import paymentService from "../payment/payment.service.js";
 import userError from "../../shared/errors/user.error.js";
+import { subPeriods } from "../../infrastructure/database/models/subPeriods.model.js";
+import { pricingConfig } from "../../infrastructure/database/models/pricingConfig.model.js";
+import PlansError from "../../shared/errors/plans.error.js";
+import { subDevice } from "../../infrastructure/database/models/subDevice.model.js";
 
 class subService {
   async purchaseSubscription(input: PurchaseInput) {
     return db.transaction(async (t) => {
-      const userAndSubInfo = await User.findByPk(input.userID, {
+      const user = await User.findByPk(input.userID, {
         attributes: ["id", "balance", "sub_id"],
         lock: t.LOCK.UPDATE,
         transaction: t,
       });
-      if (!userAndSubInfo) throw new Error();
+      if (!user) throw userError.userNotFound();
 
-      const existing = await subscriptions.findByPk(userAndSubInfo.sub_id, { transaction: t });
-
-      const newSubInfo = await this.resolvePrice(input);
-
+      const pricing = await pricingConfig.findOne({
+        where: { id: 1 },
+        attributes: { exclude: ["createdAt", "updatedAt", "id"] },
+        transaction: t,
+      });
+      if (!pricing) throw PlansError.NotFound();
+      const SubExisting = await subscriptions.findByPk(user.sub_id, { transaction: t });
+      const discount = await subPeriods.findByPk(input.custom.periodId);
+      if (!discount || !discount.is_active) throw PlansError.NotFound();
+      const priceKopecks = this.calculateSub(
+        {
+          cost_month_kopecks: pricing.cost_month_kopecks,
+          device_month_rate_kopecks: pricing.device_month_rate_kopecks,
+        },
+        input.custom.deviceCount,
+        discount.months,
+        discount.discount_percent,
+      );
       const newExpiresAt = new Date();
-      newExpiresAt.setDate(newExpiresAt.getDate() + newSubInfo.durationDays);
-      const subData = {
-        plan_id: input.planId ?? null,
-        plan_title: newSubInfo.planTitle,
-        device_limit: newSubInfo.deviceLimit,
-        price_paid_kopecks: newSubInfo.priceKopecks,
+      newExpiresAt.setDate(newExpiresAt.getDate() + discount.months * 30);
+
+      const newSubInfo = {
+        device_limit: input.custom.deviceCount,
+        price_paid_kopecks: priceKopecks,
+        discount: discount.discount_percent,
         expires_at: newExpiresAt,
         status: "active",
+        expiry_handled_at: null,
+        notified_3d_at: null,
       };
 
       let subscription;
-      if (existing) {
-        subscription = await existing.update(subData, { transaction: t });
+      if (SubExisting) {
+        subscription = await SubExisting.update(newSubInfo, { transaction: t });
+        await subDevice.destroy({ where: { sub_id: SubExisting.id }, transaction: t });
       } else {
-        subscription = await subscriptions.create(subData, { transaction: t });
-        await userAndSubInfo.update({ sub_id: subscription.id }, { transaction: t });
+        subscription = await subscriptions.create(newSubInfo, { transaction: t });
+        await user.update({ sub_id: subscription.id }, { transaction: t });
       }
       await paymentService.debitBalance(
         input.userID,
-        newSubInfo.priceKopecks,
+        newSubInfo.price_paid_kopecks,
         {
           type: "purchase",
           referenceId: subscription.id,
@@ -57,7 +77,7 @@ class subService {
         {
           model: subscriptions,
           as: "Sub",
-          attributes: { exclude: ["updatedAt", "createdAt", "price_paid_kopecks", "plan_id"] },
+          attributes: { exclude: ["expiry_handled_at", "notified_3d_at"] },
         },
       ],
       attributes: ["id"],
@@ -80,16 +100,18 @@ class subService {
       newExpiresAt.setDate(newExpiresAt.getDate() + 3);
 
       const subData = {
-        plan_id: null,
-        plan_title: "trials",
         device_limit: 1,
         price_paid_kopecks: 0,
+        discount: 0,
         expires_at: newExpiresAt,
         status: "active",
+        expiry_handled_at: null,
+        notified_3d_at: null,
       };
       let subscription;
       if (existing) {
         subscription = await existing.update(subData, { transaction: t });
+        await subDevice.destroy({ where: { sub_id: subscription.id }, transaction: t });
       } else {
         subscription = await subscriptions.create(subData, { transaction: t });
         await user.update({ sub_id: subscription.id, trial_period: true }, { transaction: t });
@@ -101,18 +123,27 @@ class subService {
     const data = await subscriptions.findOne({ where: { sub_uuid: uuid } });
     return data;
   }
-  private async resolvePrice(input: PurchaseInput) {
-    if (input.planId) {
-      const plan = await plansService.getPublicTariffPlansByID(input.planId);
-      return {
-        planTitle: plan.title,
-        deviceLimit: plan.device_limit,
-        durationDays: plan.duration_months * 30,
-        priceKopecks: plan.price_kopecks,
-      };
-    }
-    throw SubError.BadRequestResolvePrice();
+  private calculateSub(
+    pricing: { cost_month_kopecks: number; device_month_rate_kopecks: number },
+    device: number,
+    months: number,
+    percent: number,
+  ) {
+    const total = pricing.cost_month_kopecks * months + pricing.device_month_rate_kopecks * device * months;
+    return Math.round(total * (1 + percent / 100));
   }
+  // private async resolvePrice(input: PurchaseInput) {
+  //   if (input.planId) {
+  //     const plan = await plansService.getPublicTariffPlansByID(input.planId);
+  //     return {
+  //       planTitle: plan.title,
+  //       deviceLimit: plan.device_limit,
+  //       durationDays: plan.duration_months * 30,
+  //       priceKopecks: plan.price_kopecks,
+  //     };
+  //   }
+  //   throw SubError.BadRequestResolvePrice();
+  // }
 }
 
 export default new subService();

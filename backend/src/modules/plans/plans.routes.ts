@@ -3,8 +3,8 @@ import plansController from "./plans.controller.js";
 
 const plansRoutes = express.Router();
 
-plansRoutes.get("/", plansController.getPublicTariffPlans);
+plansRoutes.get("/", plansController.getPeriods);
 plansRoutes.get("/pricing", plansController.getPricing);
-plansRoutes.get("/:id", plansController.getPublicTariffPlansByID);
+// plansRoutes.get("/:id", plansController.getPublicTariffPlansByID);
 
 export default plansRoutes;

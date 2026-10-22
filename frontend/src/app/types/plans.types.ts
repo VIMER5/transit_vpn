@@ -11,4 +11,12 @@ export interface DataPricing {
   cost_month_kopecks: number;
   max_month: number;
   max_device: number;
+  SubPeriod: SubPeriod[];
+}
+
+export interface SubPeriod {
+  id: number;
+  months: number;
+  discount_percent: number;
+  is_active: boolean;
 }

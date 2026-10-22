@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GiftsIcon from "@/shared/icons/giftsIcon.vue";
 import UiCard from "@/shared/ui/ui.card.vue";
-import Button from "@/shared/ui/button.vue";
+import Button from "@/shared/ui/buttons/button.vue";
 import ShareLinkIcon from "@/shared/icons/shareLinkIcon.vue";
 import IconPanel from "@/shared/ui/icon.panel.vue";
 import StatIcon from "@/shared/icons/statIcon.vue";

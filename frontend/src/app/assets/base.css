@@ -9,7 +9,9 @@
   --color-shale-500: #57607a;
   --color-amber-500: #c9a15a;
   --color-red-500: #e04242;
+  --color-red-400: #e8806f;
   --color-green-500: #4fb872;
+  --color-green-400: #4fb8a6;
 }
 :root {
   --max-app-w: 430px;
@@ -27,7 +29,9 @@
   --bg-cil-panel: var(--color-blue-850-50);
   --c-money: var(--color-green-500);
   --c-done: var(--color-green-500);
-  --c-error: var(--color-red-500);
+  --c-error: var(--color-red-400);
+  --c-success: var(--color-green-400);
+  --buttonControls-bg: var(--color-blue-800);
 }
 
 body {

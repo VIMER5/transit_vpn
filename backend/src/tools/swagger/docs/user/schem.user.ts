@@ -52,6 +52,10 @@ export const user_schema = {
         description: "статус аккаунта",
         enum: ["active", "banned"],
       },
+      trial_period: {
+        type: "boolean",
+        description: "Выдавался ли пробный период у пользователя",
+      },
       balance: {
         type: "number",
         description: "баланс пользователя(в копейках)",

@@ -1,4 +1,4 @@
-import type { InfoCurrentUserSubResponse, deviceLimits, deviceList, fullSubInfo } from "../types/sub.types";
+import type { InfoCurrentUserSubResponse, deviceLimits, deviceList, subInfo } from "../types/sub.types";
 import $api from "@/app/api/axios";
 import { purchaseRequestSchema } from "@/app/api/validator/subscriptions.validator";
 import { useNotificationStore } from "@/app/stores/notification.store";
@@ -48,20 +48,11 @@ export default function SubApi() {
       return [];
     }
   }
-  async function getSubInfoCurrentUser(): Promise<InfoCurrentUserSubResponse | null> {
-    const notificationStore = useNotificationStore();
-    try {
-      const { data } = await $api.get<InfoCurrentUserSubResponse>("/sub");
-      return data;
-    } catch (e) {
-      console.log(e);
-      if (e instanceof AxiosError && e.response && e.response.data.error)
-        notificationStore.setNotification(e.response.data.error.message, "--c-error");
-      else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
-      return null;
-    }
+  async function getSubInfoCurrentUser(): Promise<subInfo | null> {
+    const { data } = await $api.get<InfoCurrentUserSubResponse>("/sub");
+    return data.Sub;
   }
-  async function purchaseSub(Request: any): Promise<fullSubInfo | null> {
+  async function purchaseSub(Request: any): Promise<subInfo | null> {
     const notificationStore = useNotificationStore();
     try {
       const { error, value } = purchaseRequestSchema.validate(Request, {
@@ -72,7 +63,7 @@ export default function SubApi() {
         notificationStore.setNotification("Ошибка данных", "--c-error");
         throw new Error("validation_failed");
       }
-      const { data } = await $api.post<fullSubInfo>("/sub/purchase", value);
+      const { data } = await $api.post<subInfo>("/sub/purchase", value);
       notificationStore.setNotification("Успешно", "--c-done");
       return data;
     } catch (e) {
@@ -83,6 +74,7 @@ export default function SubApi() {
       return null;
     }
   }
+
   async function getSubTrials(): Promise<InfoCurrentUserSubResponse | null> {
     const notificationStore = useNotificationStore();
     try {

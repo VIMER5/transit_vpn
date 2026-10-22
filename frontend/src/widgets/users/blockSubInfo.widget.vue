@@ -1,70 +1,60 @@
 <script setup lang="ts">
 import SubApi from "@/app/api/sub.api";
+import { useSubStore } from "@/app/stores/sub.store";
+import { useUserStore } from "@/app/stores/user.store";
 import type { InfoCurrentUserSubResponse } from "@/app/types/sub.types";
 import { useFormat } from "@/composables/useFormat";
 import PrintSubIcon from "@/shared/icons/printSubIcon.vue";
+import LoaderUI from "@/shared/ui/loaderUI.vue";
 import ModalWindow from "@/shared/ui/modalWindow.vue";
 import UiCard from "@/shared/ui/ui.card.vue";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 
-const { getSubInfoCurrentUser, getSubTrials } = SubApi();
+const { getSubTrials } = SubApi();
 const { formatDays } = useFormat();
 
 const modalWindow = ref(false);
 
-const SubInfo = ref<InfoCurrentUserSubResponse | null>(null);
-const isLoading = ref(true);
+const subStore = useSubStore();
+const userStore = useUserStore();
+
+const isLoading = ref(false);
 
 onMounted(async () => {
-  try {
-    SubInfo.value = await getSubInfoCurrentUser();
-  } finally {
-    isLoading.value = false;
-  }
+  await subStore.updateSubInfo();
 });
 
 async function trials() {
   try {
     isLoading.value = true;
-    SubInfo.value = await getSubTrials();
-    SubInfo.value = await getSubInfoCurrentUser();
+    await getSubTrials();
+    await subStore.updateSubInfo();
   } finally {
     isLoading.value = false;
   }
 }
-
-const sub = computed(() => SubInfo.value?.Sub ?? null);
-const subID = computed(() => sub.value?.id ?? null);
-const subStatus = computed(() => sub.value?.status === "active");
-const strStatusSub = computed(() => (subStatus.value ? "Транзит активен" : "Транзит неактивен"));
-const subExpires_at = computed(() => (sub.value ? new Date(sub.value.expires_at) : null));
-const subValidUntil = computed(() => subExpires_at.value?.toLocaleDateString("ru-RU") ?? "-");
-const subLeftDays = computed(() => {
-  if (!subExpires_at.value) return 0;
-  const diffMs = subExpires_at.value.getTime() - Date.now();
-  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-  return diffDays < 0 ? 0 : diffDays;
-});
 </script>
 
 <template>
   <UiCard class="bg">
     <div v-if="!isLoading">
-      <div v-if="sub" class="subInfo">
+      <div v-if="subStore.sub" class="subInfo">
         <header class="subInfo-header">
           <div class="content">
-            <h2>ПРОПУСК · ID. {{ subID }}</h2>
-            <h3 :class="{ redColoer: !subStatus }" class="statusSub">{{ strStatusSub }}</h3>
+            <h2>ПРОПУСК · ID. {{ subStore.sub.id }}</h2>
+            <h3 :class="{ redColoer: !subStore.subIsActive }" class="statusSub">{{ subStore.strStatusSub }}</h3>
           </div>
-          <PrintSubIcon :is-active="subStatus" />
+          <PrintSubIcon :is-active="subStore.subIsActive" />
         </header>
         <main>
           <ul class="sub__deadlinesInfo">
             <li class="left">
-              Осталось<span :class="{ redColoer: subLeftDays == 0 }">{{ formatDays(subLeftDays) }}</span>
+              Осталось<span :class="{ redColoer: subStore.subLeftDays == 0 }">{{
+                formatDays(subStore.subLeftDays)
+              }}</span>
             </li>
             <li class="validUntil">
-              Действует до<span>{{ subValidUntil }}</span>
+              Действует до<span>{{ subStore.subValidUntil }}</span>
             </li>
           </ul>
         </main>
@@ -75,11 +65,13 @@ const subLeftDays = computed(() => {
       </div>
       <div v-else class="isNoSub">
         <h2>У вас пока нет транзита</h2>
-        <h4>Вам доступен тестовый период на 3 дня.</h4>
-        <button @click="trials" class="button__trialPeriod">Активировать</button>
+        <div class="trials" v-if="!userStore.profile?.trial_period">
+          <h4>Вам доступен тестовый период на 3 дня.</h4>
+          <button @click="trials" class="button__trialPeriod">Активировать</button>
+        </div>
       </div>
     </div>
-    <div class="load" v-else>Загрузка...</div>
+    <div class="load" v-else><LoaderUI /></div>
   </UiCard>
 </template>
 

@@ -12,12 +12,15 @@ onMounted(async () => {
   expand();
   run();
 });
+function preventZoom(event: MouseEvent) {
+  event.preventDefault();
+}
 </script>
 
 <template>
   <loadingWidget v-if="status == 'loading'" />
   <ErrorScreen @retry="run" :error-text="errorMessage" v-else-if="status == 'error'" />
-  <RouterView v-else />
+  <RouterView @dblclick="preventZoom" v-else />
 </template>
 
 <style scoped></style>

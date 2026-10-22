@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RUBIcon from "@/shared/icons/RUBIcon.vue";
-import Button from "@/shared/ui/button.vue";
+import Button from "@/shared/ui/buttons/button.vue";
 import IconPanel from "@/shared/ui/icon.panel.vue";
 import uiCard from "@/shared/ui/ui.card.vue";
 

@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import { models, setupAssociations } from "./init.models.js";
 import { config } from "../../config.js";
-import { seedDefaultsSettings, seedPricingDefaults } from "./seed.js";
+import { seedDefaultsSettings, seedPeriodsDefaults, seedPricingDefaults } from "./seed.js";
 
 export const db = new Sequelize(config.db.name, config.db.login, config.db.pass, {
   host: config.db.host,
@@ -29,6 +29,7 @@ export async function connection() {
     console.log(`Процесс синхронизации моделей прошёл успешно.`);
     await seedPricingDefaults();
     await seedDefaultsSettings();
+    await seedPeriodsDefaults();
     console.log("Сидирование завершено.");
   } catch (err) {
     console.log(err);

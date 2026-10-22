@@ -1,33 +1,19 @@
 export const plans_schema = {
-  PublicTariffPlansResponse: {
-    type: "array",
-    items: {
-      $ref: "#/components/schemas/PublicTariffPlans",
-    },
-  },
-  PublicTariffPlans: {
+  Periods: {
     type: "object",
     properties: {
       id: {
         type: "number",
       },
-      title: {
-        type: "string",
-        description: "Название тарифа.",
-      },
-      price_kopecks: {
+      months: {
         type: "number",
-        description: "Цена тарифа в копейках",
+        description: "Срок периода",
       },
-      duration_months: {
+      discount_percent: {
         type: "number",
-        description: "Продолжительность в месяцах.",
+        description: "Процент скидки",
       },
-      device_limit: {
-        type: "number",
-        description: "Кол-во устройств",
-      },
-      accent: {
+      is_active: {
         type: "boolean",
       },
     },
@@ -43,13 +29,15 @@ export const plans_schema = {
         type: "number",
         description: "Стоимость одного месяца(в копейках).",
       },
-      max_month: {
-        type: "number",
-        description: "Максимальный период",
-      },
       max_device: {
         type: "number",
         description: "Максимальное кол-во устройств",
+      },
+      SubPeriod: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/Periods",
+        },
       },
     },
   },

@@ -1,9 +1,8 @@
 interface PurchaseInput {
   userID: bigint;
-  planId?: number;
-  custom?: {
+  custom: {
     deviceCount: number;
-    durationMonths: number;
+    periodId: number;
   };
 }
 
