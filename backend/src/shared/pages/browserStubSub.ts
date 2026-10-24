@@ -54,7 +54,6 @@ export function sendBrowserStubSub(res: Response, data: data) {
   <h1>Ссылка для VPN-приложения</h1>
   <p>Это ссылка подписки. В браузере она не работает, её нужно добавить в приложение.</p>
   
-  <!-- Блок информации о подписке -->
   <div class="status-card">
     <div class="status-row">
       <span class="label">Статус:</span>

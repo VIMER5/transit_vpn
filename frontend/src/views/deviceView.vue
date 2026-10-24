@@ -1,40 +1,33 @@
 <script setup lang="ts">
 import { isServerError } from "@/app/api/axios";
 import SubApi from "@/app/api/sub.api";
+import { useSubStore } from "@/app/stores/sub.store";
 import type { deviceLimits, deviceList } from "@/app/types/sub.types";
 import DeviceInfo from "@/shared/ui/deviceInfo.vue";
 import ProgressBar from "@/shared/ui/progress.bar.vue";
 import { onMounted, ref } from "vue";
 
-const { getDeviceLimit, getdeviceList, deauthorizeDevice } = SubApi();
+const { getdeviceList, deauthorizeDevice } = SubApi();
+
+const subStore = useSubStore();
+
 const isLoading = ref(true);
-const deviceLimits = ref<deviceLimits | null>();
 const deviceList = ref<deviceList[]>([]);
 onMounted(async () => {
-  try {
-    const limitsResult = await getDeviceLimit();
-    if (limitsResult === null) {
-      deviceLimits.value = null;
-    } else if (isServerError(limitsResult)) {
-    } else {
-      deviceLimits.value = limitsResult;
-    }
+  await subStore.updateSubInfo();
+  if (subStore.deviceLimit) {
     deviceList.value = await getdeviceList();
-  } finally {
-    isLoading.value = false;
   }
 });
 async function deauthorize(id: number) {
   try {
+    if (isLoading.value) return;
+    isLoading.value = true;
     await deauthorizeDevice(id);
-    const limitsResult = await getDeviceLimit();
-    if (limitsResult === null) {
-      deviceLimits.value = null;
-    } else if (isServerError(limitsResult)) {
-    } else {
-      deviceLimits.value = limitsResult;
+    await subStore.updateSubInfo();
+    if (subStore.deviceLimit) {
+      deviceList.value = await getdeviceList();
     }
-    deviceList.value = await getdeviceList();
   } finally {
     isLoading.value = false;
   }
@@ -45,13 +38,16 @@ async function deauthorize(id: number) {
   <main class="device__view">
     <h2 class="h2">Отметки о въезде</h2>
     <h1 class="h1">Устройства</h1>
-    <div class="info" v-if="!isLoading">
+    <div class="info" v-if="subStore.sub">
       <div class="device__bar">
-        <span>Использовано {{ deviceLimits?.countDivice ?? 0 }} из {{ deviceLimits?.deviceLimitSub ?? 0 }}</span>
+        <span
+          >Использовано {{ subStore.deviceLimit?.countDivice ?? 0 }} из
+          {{ subStore.deviceLimit?.deviceLimitSub ?? 0 }}</span
+        >
         <ProgressBar
           class="device__bar-progress"
-          :max-value="deviceLimits?.deviceLimitSub ?? 0"
-          :value="deviceLimits?.countDivice ?? 0"
+          :max-value="subStore.deviceLimit?.deviceLimitSub ?? 0"
+          :value="subStore.deviceLimit?.countDivice ?? 0"
         />
       </div>
       <ul class="device__list" v-if="deviceList.length > 0">
@@ -61,7 +57,7 @@ async function deauthorize(id: number) {
       </ul>
       <div class="notDivece" v-else>Вы ещё не подключили своё устройство.</div>
     </div>
-    <div class="load" v-else>Загрузка...</div>
+    <div class="noSub" v-else>У вас ещё нет транзита</div>
   </main>
 </template>
 

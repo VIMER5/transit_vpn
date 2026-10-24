@@ -2,12 +2,20 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import type { DataPricing } from "../types/plans.types";
 import { PlansAPI } from "../api/plans.api";
+import type { appPayLoad } from "../types/global.types";
+import $api from "../api/axios";
 
 const { getPricing } = PlansAPI();
 
 export const useAppStore = defineStore("AppStore", () => {
   const pricing = ref<DataPricing | null>(null);
+  const PayLoad = ref<appPayLoad>();
   const pricingLoading = ref(false);
+
+  async function fetchPayLoad() {
+    const { data } = await $api.get<appPayLoad>("/app/PayLoad");
+    PayLoad.value = data;
+  }
 
   async function fetchPricing() {
     if (pricingLoading.value) return;
@@ -21,6 +29,7 @@ export const useAppStore = defineStore("AppStore", () => {
 
   async function initAppStore() {
     try {
+      await fetchPayLoad();
       await fetchPricing();
     } catch (e) {
       throw new Error("Ошибка инициализации AppStore", {
@@ -28,5 +37,5 @@ export const useAppStore = defineStore("AppStore", () => {
       });
     }
   }
-  return { pricing, initAppStore, fetchPricing };
+  return { pricing, PayLoad, initAppStore, fetchPricing };
 });

@@ -46,7 +46,9 @@ class subService {
         price_paid_kopecks: priceKopecks,
         discount: discount.discount_percent,
         expires_at: newExpiresAt,
+        term_months: discount.months,
         status: "active",
+        isTrials: false,
         expiry_handled_at: null,
         notified_3d_at: null,
       };
@@ -104,6 +106,7 @@ class subService {
         price_paid_kopecks: 0,
         discount: 0,
         expires_at: newExpiresAt,
+        isTrials: true,
         status: "active",
         expiry_handled_at: null,
         notified_3d_at: null,

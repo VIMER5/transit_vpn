@@ -21,17 +21,11 @@ export default function SubApi() {
       } else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
     }
   }
-  async function getDeviceLimit(): Promise<deviceLimits | serverError | null> {
-    const notificationStore = useNotificationStore();
+  async function getDeviceLimit(): Promise<deviceLimits | null> {
     try {
       const { data } = await $api.get<deviceLimits>("/sub/device/limits");
       return data;
     } catch (e) {
-      console.log(e);
-      if (e instanceof AxiosError && e.response && e.response.data.error) {
-        const serverError: serverError = e.response.data.error as serverError;
-        return serverError;
-      } else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
       return null;
     }
   }

@@ -71,6 +71,10 @@ export const Sub_schema = {
         type: "number",
         description: "Скидка при покупки",
       },
+      term_months: {
+        type: "number",
+        description: "кол-во мес при покопки",
+      },
       expires_at: {
         type: "string",
         format: "date-time",
@@ -78,6 +82,9 @@ export const Sub_schema = {
       status: {
         type: "string",
         enum: ["active", "expired"],
+      },
+      isTrials: {
+        type: "boolean",
       },
       updatedAt: {
         type: "string",

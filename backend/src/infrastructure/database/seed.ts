@@ -38,6 +38,7 @@ export async function seedDefaultsSettings() {
     raw: true,
   });
   if (!findKey("useTgBot", settings)) await Setting.upsert({ key: "useTgBot", value: "StudentChallenge_bot" });
+  if (!findKey("urlSupport", settings)) await Setting.upsert({ key: "urlSupport", value: "https://t.me/sosentry " });
 }
 
 function findKey(Key: string, data: Setting[]) {

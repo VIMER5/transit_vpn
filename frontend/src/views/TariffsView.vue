@@ -3,9 +3,12 @@ import { onMounted, ref } from "vue";
 import ModalWindow from "@/shared/ui/modalWindow.vue";
 import { useAppStore } from "@/app/stores/app.store";
 import SubBuilderWiget from "@/widgets/sub/subBuilder.wiget.vue";
+import WarnInfoPanel from "@/shared/ui/notification/warnInfoPanel.vue";
+import DestroySubIcon from "@/shared/icons/destroySubIcon.vue";
+import { useSubStore } from "@/app/stores/sub.store";
 
-const isOpenModal = ref(true);
 const appStore = useAppStore();
+const subStore = useSubStore();
 
 onMounted(async () => {
   await appStore.fetchPricing();
@@ -14,14 +17,12 @@ onMounted(async () => {
 
 <template>
   <main class="tariffs__view">
+    <h1 class="h1">Создай свою визу!</h1>
+    <WarnInfoPanel style="margin-bottom: 10px" v-if="subStore.subIsActive">
+      <template v-slot:icon><DestroySubIcon /></template>
+      <template v-slot:text>У вас уже есть активный транзит. При покупке нового текущий будет аннулирован.</template>
+    </WarnInfoPanel>
     <SubBuilderWiget :pricing="appStore.pricing" />
-    <ModalWindow v-model:open="isOpenModal">
-      <div class="tariffs__warn">
-        <h3>Внимание</h3>
-
-        <p>При покупке новой подписки текущая подписка будет аннулирована.</p>
-      </div>
-    </ModalWindow>
   </main>
 </template>
 
@@ -31,54 +32,6 @@ onMounted(async () => {
   font-size: 14px;
   font-weight: 500;
   color: white;
-}
-
-.title-with-lines {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  gap: 7px;
-  width: 100%;
-  font-size: 15px;
-  font-weight: 500;
-}
-.plans {
-  margin-top: 15px;
-}
-.title-with-lines::before,
-.title-with-lines::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-image: repeating-linear-gradient(90deg, var(--c-line) 0 6px, transparent 6px 12px);
-}
-.mt-10 {
-  margin-top: 10px;
-}
-.planBuilder {
-  margin-top: 18px;
-}
-
-.tariffs__warn > h3 {
   margin-bottom: 20px;
-  color: var(--c-accent);
-  font-size: 20px;
-}
-.tariffs__warn {
-  font-size: 16px;
-}
-.tariffs__warn > p {
-  font-size: 15px;
-  text-align: start;
-  margin-bottom: 15px;
-}
-.tariffs__warn > ul {
-  text-align: start;
-}
-.tariffs__warn > ul li {
-  margin-bottom: 10px;
-}
-.tariffs__warn > ul > li > span {
-  color: var(--c-accent);
 }
 </style>

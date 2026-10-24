@@ -17,4 +17,18 @@ export const app_schema = {
       },
     },
   },
+  appPayLoad: {
+    type: "object",
+    properties: {
+      useTgBot: {
+        type: "string",
+      },
+      urlSupport: {
+        type: "string",
+      },
+      subURL: {
+        type: "string",
+      },
+    },
+  },
 };

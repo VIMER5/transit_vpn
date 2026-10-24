@@ -1,16 +1,17 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import type { subInfo } from "../types/sub.types";
+import type { deviceLimits, subInfo } from "../types/sub.types";
 import SubApi from "../api/sub.api";
 import { useNotificationStore } from "./notification.store";
 import { AxiosError } from "axios";
 
-const { getSubInfoCurrentUser } = SubApi();
+const { getSubInfoCurrentUser, getDeviceLimit } = SubApi();
 
 export const useSubStore = defineStore("SubStore", () => {
   const notificationStore = useNotificationStore();
 
   const sub = ref<subInfo | null>(null);
+  const deviceLimit = ref<deviceLimits | null>(null);
   const subLoading = ref(false);
 
   const subIsActive = computed(() => sub.value?.status === "active");
@@ -28,6 +29,7 @@ export const useSubStore = defineStore("SubStore", () => {
     subLoading.value = true;
     try {
       sub.value = await getSubInfoCurrentUser();
+      deviceLimit.value = await getDeviceLimit();
     } finally {
       subLoading.value = false;
     }
@@ -53,6 +55,7 @@ export const useSubStore = defineStore("SubStore", () => {
   }
   return {
     sub,
+    deviceLimit,
     subIsActive,
     strStatusSub,
     subExpires_at,

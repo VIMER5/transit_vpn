@@ -2,7 +2,9 @@
 import miniProfileWidget from "@/widgets/users/miniProfile.widget.vue";
 import { useUserStore } from "@/app/stores/user.store";
 import ReferralPanelWidget from "@/widgets/users/referralPanel.widget.vue";
+import { useAppStore } from "@/app/stores/app.store";
 const UserStore = useUserStore();
+const appStore = useAppStore();
 </script>
 
 <template>
@@ -15,7 +17,7 @@ const UserStore = useUserStore();
   <ReferralPanelWidget class="referralPanel" />
 
   <ul class="usefulLinks">
-    <li class="border-bottom"><div class="content">Поддержка</div></li>
+    <li class="border-bottom"><a class="content" :href="appStore.PayLoad?.urlSupport">Поддержка</a></li>
     <li class="border-bottom">
       <RouterLink class="content" to="/profile/payment_history">История платежей</RouterLink>
     </li>

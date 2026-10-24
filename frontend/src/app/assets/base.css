@@ -43,3 +43,9 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+
+.perforation {
+  margin: 0 -20px;
+  height: 1px;
+  background-image: repeating-linear-gradient(90deg, var(--c-line) 0 6px, transparent 6px 12px);
+}

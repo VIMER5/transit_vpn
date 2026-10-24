@@ -5,6 +5,7 @@ import ProfileView from "@/views/ProfileView.vue";
 import TariffsView from "@/views/TariffsView.vue";
 import ProfileLayout from "@/app//layout/profile.layout.vue";
 import DeviceView from "@/views/deviceView.vue";
+import SubSettingsView from "@/views/subSettingsView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,7 @@ const router = createRouter({
             },
             { path: "refstatistics", name: "refstatistics", component: TariffsView },
             { path: "payment_history", name: "paymentHistory", component: TariffsView },
+            { path: "sub_settings", name: "subSetting", component: SubSettingsView },
           ],
         },
       ],

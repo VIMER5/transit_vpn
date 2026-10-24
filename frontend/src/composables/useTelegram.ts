@@ -7,5 +7,6 @@ export function useTelegram() {
     expand: () => tg?.expand(),
     close: () => tg?.close(),
     openTelegramLink: (url: string) => tg?.openTelegramLink(url),
+    openLink: (url: string) => tg?.openLink(url),
   };
 }

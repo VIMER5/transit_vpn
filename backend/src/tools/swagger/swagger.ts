@@ -13,6 +13,7 @@ import { payment_schema } from "./docs/payment/schem.payment.js";
 import { paymentPaths } from "./docs/payment/docs.payment.js";
 import { SubPaths } from "./docs/sub/docs.sub.js";
 import { Sub_schema } from "./docs/sub/schem.sub.js";
+import { appPaths } from "./docs/app/docs.app.js";
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
@@ -32,6 +33,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
     paths: {
+      ...appPaths,
       ...authPaths,
       ...UserPaths,
       ...PlansPaths,
@@ -58,6 +60,10 @@ const options: swaggerJsdoc.Options = {
       responses: {},
     },
     tags: [
+      {
+        name: "App",
+        description: "Операции приложения",
+      },
       {
         name: "Auth",
         description: "Операции аутентификации и авторизации",

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BlockWithMoneyWidget from "@/widgets/money/blockWithMoney.widget.vue";
-import BlockSubInfoWidget from "@/widgets/users/blockSubInfo.widget.vue";
+import BlockSubInfoWidget from "@/widgets/sub/blockSubInfo.widget.vue";
 import MiniDeviceWidget from "@/widgets/users/miniDevice.widget.vue";
 import MiniReferralPanelWidget from "@/widgets/users/miniReferralPanel.widget.vue";
 </script>

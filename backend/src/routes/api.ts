@@ -6,10 +6,12 @@ import plansRoutes from "../modules/plans/plans.routes.js";
 import subscriptionsApi from "../modules/subscriptions/subscriptions.routes.js";
 import paymentAPI from "../modules/payment/payment.routes.js";
 import deviceApi from "../modules/devices/device.routes.js";
+import appRoute from "../modules/app/app.route.js";
 
 const api = express.Router();
 
 api.use("/auth", authRoutes);
+api.use("/app", appRoute);
 api.use("/users", guardRest, userRoutes);
 api.use("/plans", guardRest, plansRoutes);
 api.use("/sub/device", guardRest, deviceApi);

@@ -9,8 +9,10 @@ export interface subInfo {
   device_limit: number;
   price_paid_kopecks: number;
   discount: number;
+  term_months: number;
   expires_at: string;
   status: "active" | "expired";
+  isTrials: boolean;
   createdAt: string;
   updatedAt: string;
 }

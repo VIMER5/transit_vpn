@@ -2,18 +2,20 @@
 import SubApi from "@/app/api/sub.api";
 import { useSubStore } from "@/app/stores/sub.store";
 import { useUserStore } from "@/app/stores/user.store";
-import type { InfoCurrentUserSubResponse } from "@/app/types/sub.types";
 import { useFormat } from "@/composables/useFormat";
 import PrintSubIcon from "@/shared/icons/printSubIcon.vue";
 import LoaderUI from "@/shared/ui/loaderUI.vue";
-import ModalWindow from "@/shared/ui/modalWindow.vue";
 import UiCard from "@/shared/ui/ui.card.vue";
 import { onMounted, ref } from "vue";
 
 const { getSubTrials } = SubApi();
 const { formatDays } = useFormat();
+const { formatMonths } = useFormat();
 
-const modalWindow = ref(false);
+const { isSetting = false, dataUpdateMounted = true } = defineProps<{
+  isSetting?: boolean;
+  dataUpdateMounted?: boolean;
+}>();
 
 const subStore = useSubStore();
 const userStore = useUserStore();
@@ -21,14 +23,19 @@ const userStore = useUserStore();
 const isLoading = ref(false);
 
 onMounted(async () => {
-  await subStore.updateSubInfo();
+  if (dataUpdateMounted) await updateData();
 });
+
+async function updateData() {
+  await subStore.updateSubInfo();
+  await userStore.updateBalance();
+}
 
 async function trials() {
   try {
     isLoading.value = true;
     await getSubTrials();
-    await subStore.updateSubInfo();
+    await updateData();
   } finally {
     isLoading.value = false;
   }
@@ -59,8 +66,20 @@ async function trials() {
           </ul>
         </main>
         <footer class="subInfo-footer">
-          <button @click="modalWindow = true" class="button__detailed">Подробнее</button>
-          <ModalWindow @update:open="(d) => (modalWindow = d)" :open="modalWindow">dawdawd</ModalWindow>
+          <div class="perforation"></div>
+          <RouterLink v-if="!isSetting" class="toSettings" to="/profile/sub_settings">Подробнее</RouterLink>
+          <ul class="subDetails" v-else>
+            <li>
+              <span class="title">Срок</span>
+              <span class="value">{{
+                subStore.sub.isTrials ? "Пробный" : formatMonths(subStore.sub.term_months)
+              }}</span>
+            </li>
+            <li>
+              <span class="title">Устройств</span>
+              <span class="value">{{ subStore.sub.device_limit }}</span>
+            </li>
+          </ul>
         </footer>
       </div>
       <div v-else class="isNoSub">
@@ -76,6 +95,27 @@ async function trials() {
 </template>
 
 <style scoped>
+.subDetails {
+  font-family: "JetBrains Mono";
+  font-size: 14px;
+  margin-top: 7px;
+  margin-bottom: 13px;
+  display: flex;
+  gap: 35px;
+}
+.subDetails li {
+  display: flex;
+  gap: 7px;
+  flex-direction: column;
+}
+.subDetails li .value {
+  color: white;
+}
+.perforation {
+  margin: 0px -20px;
+  height: 1px;
+  background-image: repeating-linear-gradient(90deg, var(--c-line) 0 6px, transparent 6px 12px);
+}
 .load {
   text-align: center;
   padding-bottom: 15px;
@@ -95,6 +135,7 @@ async function trials() {
   cursor: pointer;
 }
 .bg {
+  overflow: hidden;
   border-radius: 17px;
   font-family: "JetBrains Mono";
   font-weight: 400;
@@ -132,23 +173,13 @@ async function trials() {
 .subInfo-footer {
   margin-top: 20px;
 }
-.subInfo-footer::after {
-  position: absolute;
-  left: 0;
-  content: "";
-  border-bottom: 1.5px dashed var(--c-line);
-  width: 100%;
-  height: 1px;
-}
-.button__detailed {
-  padding: 12px 0;
-  margin-top: 2px;
-  width: 100%;
-  background-color: transparent;
-  color: var(--c-main-text);
+.toSettings {
   font-family: "JetBrains Mono";
-  font-size: 14px;
-  cursor: pointer;
+  color: var(--c-main-text);
+  text-align: center;
+  width: 100%;
+  display: block;
+  padding: 12px 0;
 }
 .redColoer {
   color: var(--c-error) !important;

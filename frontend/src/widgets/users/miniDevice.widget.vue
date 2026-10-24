@@ -1,26 +1,17 @@
 <script setup lang="ts">
 import { isServerError } from "@/app/api/axios";
 import SubApi from "@/app/api/sub.api";
+import { useSubStore } from "@/app/stores/sub.store";
 import type { deviceLimits } from "@/app/types/sub.types";
 import DevicesIcon from "@/shared/icons/devicesIcon.vue";
 import SmallWidgetAnIcon from "@/shared/ui/small.widget.an.icon.vue";
 import { onMounted, ref } from "vue";
 
-const isLoading = ref(true);
 const deviceLimits = ref<deviceLimits | null>();
-const { getDeviceLimit } = SubApi();
+const subStore = useSubStore();
+
 onMounted(async () => {
-  try {
-    const limitsResult = await getDeviceLimit();
-    if (limitsResult === null) {
-      deviceLimits.value = null;
-    } else if (isServerError(limitsResult)) {
-    } else {
-      deviceLimits.value = limitsResult;
-    }
-    isLoading.value = false;
-  } finally {
-  }
+  await subStore.updateSubInfo();
 });
 </script>
 
@@ -29,10 +20,10 @@ onMounted(async () => {
     <SmallWidgetAnIcon>
       <template v-slot:icon><DevicesIcon class="icon" /> </template>
       <template v-slot:main>
-        <div v-if="deviceLimits" class="ref">
+        <div v-if="subStore.deviceLimit" class="ref">
           <h2>
-            <span>{{ deviceLimits.countDivice }}</span
-            >/{{ deviceLimits.deviceLimitSub }}
+            <span>{{ subStore.deviceLimit.countDivice }}</span
+            >/{{ subStore.deviceLimit.deviceLimitSub }}
           </h2>
           <h3>Подключено</h3>
         </div>

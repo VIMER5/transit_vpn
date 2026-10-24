@@ -5,7 +5,7 @@ import { useUserStore } from "@/app/stores/user.store";
 import type { DataPricing, SubPeriod } from "@/app/types/plans.types";
 import { useCurrency } from "@/composables/useCurrency";
 import { usePricing } from "@/composables/usePricing";
-import ErrorInfoPanel from "@/shared/ui/errorInfoPanel.vue";
+import ErrorInfoPanel from "@/shared/ui/notification/errorInfoPanel.vue";
 import LoaderUI from "@/shared/ui/loaderUI.vue";
 import DeviceCountControl from "@/shared/ui/sub/DeviceCountControl.vue";
 import ListPeriods from "@/shared/ui/sub/listPeriods.vue";
@@ -98,14 +98,13 @@ async function SubPurchase() {
 </template>
 
 <style scoped>
+.perforation {
+  margin-block: 10px;
+}
 .UiCard {
   padding: 20px 15px;
   border-radius: 17px;
-}
-.perforation {
-  margin: 10px -20px;
-  height: 1px;
-  background-image: repeating-linear-gradient(90deg, var(--c-line) 0 6px, transparent 6px 12px);
+  overflow: hidden;
 }
 .period-h2 {
   color: white;
