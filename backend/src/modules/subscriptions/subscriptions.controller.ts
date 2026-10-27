@@ -11,10 +11,18 @@ class subController {
       next(e);
     }
   }
-  async getCurrentSub(req: CustomRequest, res: Response, next: NextFunction) {
+  async getUserCurrentSub(req: CustomRequest, res: Response, next: NextFunction) {
     try {
-      const data = await subscriptionsService.getCurrentUserSub(req.userId!);
+      const data = await subscriptionsService.getSubById(req.subId!);
       res.status(200).json(data);
+    } catch (e) {
+      next(e);
+    }
+  }
+  async rotateUserUuidSub(req: CustomRequest, res: Response, next: NextFunction) {
+    try {
+      const data = await subscriptionsService.rotateSubUuid(req.subId!);
+      res.status(200).json({ sub_uuid: data });
     } catch (e) {
       next(e);
     }

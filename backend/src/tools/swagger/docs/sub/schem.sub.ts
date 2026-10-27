@@ -37,6 +37,15 @@ export const Sub_schema = {
       $ref: "#/components/schemas/DeviceInfo",
     },
   },
+  rotateUuidSubResponse: {
+    type: "object",
+    properties: {
+      sub_uuid: {
+        type: "string",
+        description: "Новый UUID подписки",
+      },
+    },
+  },
   InfoCurrentUserSubResponse: {
     type: "object",
     properties: {

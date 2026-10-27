@@ -5,7 +5,7 @@ import SubApi from "../api/sub.api";
 import { useNotificationStore } from "./notification.store";
 import { AxiosError } from "axios";
 
-const { getSubInfoCurrentUser, getDeviceLimit } = SubApi();
+const { getSubInfoCurrentUser, getDeviceLimit, rotateUserUuidSub } = SubApi();
 
 export const useSubStore = defineStore("SubStore", () => {
   const notificationStore = useNotificationStore();
@@ -24,6 +24,20 @@ export const useSubStore = defineStore("SubStore", () => {
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
     return diffDays < 0 ? 0 : diffDays;
   });
+  async function rotateUuidSub() {
+    try {
+      if (sub.value) {
+        const data = await rotateUserUuidSub();
+        sub.value.sub_uuid = data.sub_uuid;
+        notificationStore.setNotification("Успешно", "--c-done");
+      }
+    } catch (e) {
+      console.log(e);
+      if (e instanceof AxiosError && e.response && e.response.data.error)
+        notificationStore.setNotification(e.response.data.error.message, "--c-error");
+      else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
+    }
+  }
   async function fetchSub() {
     if (subLoading.value) return;
     subLoading.value = true;
@@ -64,5 +78,6 @@ export const useSubStore = defineStore("SubStore", () => {
     initSubStore,
     fetchSub,
     updateSubInfo,
+    rotateUuidSub,
   };
 });

@@ -85,7 +85,7 @@ async function SubPurchase() {
               <span style="color: var(--c-error)">Не хватает {{ formatVolute(kopecksInRUB(notEnoughFunds)) }} ₽. </span>
               <RouterLink to="/" style="color: var(--c-accent)">Пополните баланс.</RouterLink>
             </ErrorInfoPanel>
-            <button v-else :disabled="isSubmit" @click="SubPurchase" class="btn btn-primary">
+            <button v-else :disabled="isSubmit" @click="SubPurchase" class="btn">
               Оформить за {{ formatVolute(kopecksInRUB(total)) }} ₽
             </button>
           </header>

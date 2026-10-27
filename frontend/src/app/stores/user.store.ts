@@ -4,6 +4,7 @@ import $api from "@/app/api/axios";
 import type { UserProfile, UserBalance } from "@/app/types/user.types";
 export const useUserStore = defineStore("UserStore", () => {
   const profile = ref<UserProfile | null>(null);
+  const isUserBanned = ref<boolean>(false);
   const isProfileLoading = ref(false);
 
   async function fetchUserProfile() {
@@ -64,6 +65,7 @@ export const useUserStore = defineStore("UserStore", () => {
     balanceInKopecks,
     photoUrl,
     referral_code,
+    isUserBanned,
     fetchUserProfile,
     fetch,
     updateBalance,

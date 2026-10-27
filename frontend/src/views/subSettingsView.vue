@@ -1,13 +1,20 @@
 <script setup lang="ts">
+import { useAppStore } from "@/app/stores/app.store";
 import { useSubStore } from "@/app/stores/sub.store";
+import { useUserStore } from "@/app/stores/user.store";
 import BlockSubInfoWidget from "@/widgets/sub/blockSubInfo.widget.vue";
+import DeviceParametersWidget from "@/widgets/sub/deviceParameters.widget.vue";
 import LinkConnectionWidget from "@/widgets/sub/linkConnection.widget.vue";
 import { onMounted } from "vue";
 
 const subStore = useSubStore();
+const appStore = useAppStore();
+const userStore = useUserStore();
 
 onMounted(async () => {
   await subStore.updateSubInfo();
+  await appStore.fetchPricing();
+  await userStore.updateBalance();
 });
 </script>
 
@@ -18,6 +25,7 @@ onMounted(async () => {
     <div class="content">
       <BlockSubInfoWidget :is-setting="true" :data-update-mounted="false" />
       <LinkConnectionWidget />
+      <DeviceParametersWidget />
     </div>
   </main>
 </template>

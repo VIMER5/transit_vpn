@@ -5,6 +5,7 @@ import { useSubStore } from "@/app/stores/sub.store";
 import { useTelegram } from "@/composables/useTelegram";
 import CopyIcon from "@/shared/icons/copyIcon.vue";
 import LinkIcon from "@/shared/icons/LinkIcon.vue";
+import UpdateIcon from "@/shared/icons/updateIcon.vue";
 import Button from "@/shared/ui/buttons/button.vue";
 import UiCard from "@/shared/ui/ui.card.vue";
 import { computed, ref } from "vue";
@@ -14,6 +15,7 @@ const subStore = useSubStore();
 const { openLink } = useTelegram();
 const notificationStore = useNotificationStore();
 const copied = ref(false);
+const isRotateUUID = ref(false);
 const url = computed(() => `https://${appStore.PayLoad?.subURL}/${subStore.sub?.sub_uuid}`);
 async function copyToClipboard() {
   try {
@@ -26,6 +28,15 @@ async function copyToClipboard() {
   } catch (e) {
     console.error("Не удалось скопировать текст: ", e);
     notificationStore.setNotification("Ошибка копирования", "--c-done");
+  }
+}
+async function RotateUUID() {
+  try {
+    if (isRotateUUID.value) return;
+    isRotateUUID.value = true;
+    await subStore.rotateUuidSub();
+  } finally {
+    isRotateUUID.value = false;
   }
 }
 </script>
@@ -44,7 +55,13 @@ async function copyToClipboard() {
         <div class="value">{{ url }}</div>
         <button class="copyButton" @click="copyToClipboard" :disabled="copied"><CopyIcon /></button>
       </div>
-      <Button class="btn" @click="openLink(url)">Подключить</Button>
+      <Button class="btn" @click="openLink(url)" :disabled="isRotateUUID">Подключить</Button>
+      <div class="auxiliary__buttons">
+        <div class="Заглушка-мб-будет-кнопка"></div>
+        <button class="rotateUuidSub-button" @click="RotateUUID" :disabled="isRotateUUID">
+          <UpdateIcon :class="{ rotation: isRotateUUID }" color="#e8806f" /> Сбросить ссылку
+        </button>
+      </div>
     </main>
     <footer class="linkConnectionWidget-footer">
       <div class="perforation"></div>
@@ -54,6 +71,24 @@ async function copyToClipboard() {
 </template>
 
 <style scoped>
+.auxiliary__buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+.rotateUuidSub-button {
+  color: var(--c-error);
+  background-color: transparent;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rotation {
+  animation: rotation 1s linear infinite;
+}
 .linkConnectionWidget {
   border-radius: 17px;
   overflow: hidden;
@@ -129,6 +164,11 @@ async function copyToClipboard() {
   font-weight: 500;
   border-radius: 10px;
   width: 100%;
+  transition: all 0.5s;
+}
+.btn:disabled {
+  background-color: var(--bg-button);
+  color: var(--c-line);
 }
 .linkConnectionWidget-footer p {
   font-size: 13px;

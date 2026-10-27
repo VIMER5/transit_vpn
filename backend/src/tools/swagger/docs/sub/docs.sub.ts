@@ -12,12 +12,48 @@ export const SubPaths = {
         200: {
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/InfoCurrentUserSubResponse" },
+              schema: { $ref: "#/components/schemas/SubInfo" },
             },
           },
         },
         400: {
           description: "Некорректные данные",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/sub/rotateSubUuid": {
+    patch: {
+      summary: "Перевыпустить UUID подписки пользователя",
+      tags: ["Sub"],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/rotateUuidSubResponse" },
+            },
+          },
+        },
+        404: {
+          description: "Подписка не найдена",
           content: {
             "application/json": {
               schema: { $ref: "#/components/schemas/error" },

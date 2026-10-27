@@ -1,8 +1,3 @@
-export interface InfoCurrentUserSubResponse {
-  id: bigint;
-  Sub: subInfo;
-}
-
 export interface subInfo {
   id: number;
   sub_uuid: string;
@@ -28,4 +23,8 @@ export interface deviceList {
   deviceName: string;
   os: string;
   createdAt: string;
+}
+
+export interface rotateUuidSubResponse {
+  sub_uuid: string;
 }

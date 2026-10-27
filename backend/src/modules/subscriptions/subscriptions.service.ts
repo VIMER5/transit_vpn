@@ -9,8 +9,23 @@ import { subPeriods } from "../../infrastructure/database/models/subPeriods.mode
 import { pricingConfig } from "../../infrastructure/database/models/pricingConfig.model.js";
 import PlansError from "../../shared/errors/plans.error.js";
 import { subDevice } from "../../infrastructure/database/models/subDevice.model.js";
+import { UniqueConstraintError } from "sequelize";
+import { randomUUID } from "node:crypto";
 
 class subService {
+  async rotateSubUuid(subId: number): Promise<string> {
+    const sub = await subscriptions.findByPk(subId);
+    if (!sub) throw SubError.subNotFound();
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        await sub.update({ sub_uuid: randomUUID() });
+        return sub.sub_uuid;
+      } catch (e) {
+        if (!(e instanceof UniqueConstraintError)) throw e;
+      }
+    }
+    throw new Error("Не удалось выпустить уникальный UUID");
+  }
   async purchaseSubscription(input: PurchaseInput) {
     return db.transaction(async (t) => {
       const user = await User.findByPk(input.userID, {
@@ -73,19 +88,12 @@ class subService {
       return subscription;
     });
   }
-  async getCurrentUserSub(userId: bigint) {
-    const subUser = await User.findByPk(userId, {
-      include: [
-        {
-          model: subscriptions,
-          as: "Sub",
-          attributes: { exclude: ["expiry_handled_at", "notified_3d_at"] },
-        },
-      ],
-      attributes: ["id"],
+  async getSubById(subId: number) {
+    const sub = await subscriptions.findByPk(subId, {
+      attributes: { exclude: ["expiry_handled_at", "notified_3d_at"] },
     });
-    if (!subUser) throw userError.userNotFound();
-    return subUser;
+    if (!sub) throw SubError.subNotFound();
+    return sub;
   }
   async trials(userId: bigint) {
     return db.transaction(async (t) => {
@@ -117,8 +125,8 @@ class subService {
         await subDevice.destroy({ where: { sub_id: subscription.id }, transaction: t });
       } else {
         subscription = await subscriptions.create(subData, { transaction: t });
-        await user.update({ sub_id: subscription.id, trial_period: true }, { transaction: t });
       }
+      await user.update({ sub_id: subscription.id, trial_period: true }, { transaction: t });
       return subscription;
     });
   }

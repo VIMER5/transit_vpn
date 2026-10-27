@@ -1,4 +1,4 @@
-import type { InfoCurrentUserSubResponse, deviceLimits, deviceList, subInfo } from "../types/sub.types";
+import type { deviceLimits, deviceList, rotateUuidSubResponse, subInfo } from "../types/sub.types";
 import $api from "@/app/api/axios";
 import { purchaseRequestSchema } from "@/app/api/validator/subscriptions.validator";
 import { useNotificationStore } from "@/app/stores/notification.store";
@@ -42,9 +42,13 @@ export default function SubApi() {
       return [];
     }
   }
+  async function rotateUserUuidSub() {
+    const { data } = await $api.patch<rotateUuidSubResponse>("/sub/rotateSubUuid");
+    return data;
+  }
   async function getSubInfoCurrentUser(): Promise<subInfo | null> {
-    const { data } = await $api.get<InfoCurrentUserSubResponse>("/sub");
-    return data.Sub;
+    const { data } = await $api.get<subInfo>("/sub");
+    return data;
   }
   async function purchaseSub(Request: any): Promise<subInfo | null> {
     const notificationStore = useNotificationStore();
@@ -68,11 +72,10 @@ export default function SubApi() {
       return null;
     }
   }
-
-  async function getSubTrials(): Promise<InfoCurrentUserSubResponse | null> {
+  async function getSubTrials(): Promise<subInfo | null> {
     const notificationStore = useNotificationStore();
     try {
-      const { data } = await $api.get<InfoCurrentUserSubResponse>("/sub/trials");
+      const { data } = await $api.get<subInfo>("/sub/trials");
       notificationStore.setNotification("Успешно", "--c-done");
       return data;
     } catch (e) {
@@ -83,5 +86,13 @@ export default function SubApi() {
       return null;
     }
   }
-  return { getSubInfoCurrentUser, getSubTrials, purchaseSub, getDeviceLimit, getdeviceList, deauthorizeDevice };
+  return {
+    getSubInfoCurrentUser,
+    getSubTrials,
+    purchaseSub,
+    getDeviceLimit,
+    getdeviceList,
+    deauthorizeDevice,
+    rotateUserUuidSub,
+  };
 }
