@@ -1,4 +1,11 @@
-import type { deviceLimits, deviceList, rotateUuidSubResponse, subInfo } from "../types/sub.types";
+import type {
+  deviceLimits,
+  deviceList,
+  rotateUuidSubResponse,
+  subInfo,
+  upgradeDeviceQuoteResponse,
+  upgradeDeviceResponse,
+} from "../types/sub.types";
 import $api from "@/app/api/axios";
 import { purchaseRequestSchema } from "@/app/api/validator/subscriptions.validator";
 import { useNotificationStore } from "@/app/stores/notification.store";
@@ -45,6 +52,29 @@ export default function SubApi() {
   async function rotateUserUuidSub() {
     const { data } = await $api.patch<rotateUuidSubResponse>("/sub/rotateSubUuid");
     return data;
+  }
+  async function getDeviceUpgradeQuote(newDevice: number) {
+    const { data } = await $api.get<upgradeDeviceQuoteResponse>(`/sub/upgrade/quote?deviceCount=${newDevice}`);
+    return data;
+  }
+  async function deviceUpgrade(deviceCount: number, expectedPriceKopecks: number) {
+    const notificationStore = useNotificationStore();
+    try {
+      const { data } = await $api.patch<upgradeDeviceResponse>("/sub/upgrade", {
+        deviceUpgrade: {
+          deviceCount,
+          expectedPriceKopecks,
+        },
+      });
+      notificationStore.setNotification("Успешно", "--c-done");
+      return data;
+    } catch (e) {
+      console.log(e);
+      if (e instanceof AxiosError && e.response && e.response.data.error)
+        notificationStore.setNotification(e.response.data.error.message, "--c-error");
+      else notificationStore.setNotification("Мой код решил что сегодня выходной", "--c-error");
+      return null;
+    }
   }
   async function getSubInfoCurrentUser(): Promise<subInfo | null> {
     const { data } = await $api.get<subInfo>("/sub");
@@ -94,5 +124,7 @@ export default function SubApi() {
     getdeviceList,
     deauthorizeDevice,
     rotateUserUuidSub,
+    getDeviceUpgradeQuote,
+    deviceUpgrade,
   };
 }

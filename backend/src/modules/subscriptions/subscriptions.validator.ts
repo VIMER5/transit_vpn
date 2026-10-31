@@ -13,3 +13,15 @@ export const ParamsUUIDSchema = Joi.object({
     wrapper: false,
   }),
 });
+
+export const quoteQueryParams = Joi.object({
+  deviceCount: Joi.number().integer().min(1).max(100).required(),
+});
+
+export const upgradeSchema = Joi.object({
+  deviceUpgrade: Joi.object({
+    deviceCount: Joi.number().integer().min(1).max(100).required(),
+    expectedPriceKopecks: Joi.number().integer().required(),
+  }),
+  plansUpgrade: Joi.object(),
+}).xor("deviceUpgrade", "plansUpgrade");

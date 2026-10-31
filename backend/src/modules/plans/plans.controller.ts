@@ -14,7 +14,10 @@ class plansControllers {
   async getPricing(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const data = await plansService.getPricing();
-      res.status(200).json(data);
+      const resultPricing = data.get({ plain: true });
+      const dataPeriods = await plansService.getPeriods();
+
+      res.status(200).json({ ...resultPricing, SubPeriod: dataPeriods });
     } catch (e) {
       next(e);
     }

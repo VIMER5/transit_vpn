@@ -5,7 +5,7 @@ import { historyRequestSchema } from "./payment.validator.js";
 
 const paymentAPI = express.Router();
 
-paymentAPI.post("/", paymentController.test);
+// paymentAPI.post("/", paymentController.test);
 paymentAPI.post("/history", validation(historyRequestSchema), paymentController.history);
 
 export default paymentAPI;

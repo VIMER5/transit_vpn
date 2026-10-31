@@ -1,1 +1,7 @@
-export type TypesBalanceTransaction = "topup" | "purchase" | "referral_bonus" | "refund" | "admin_adjustment";
+export type TypesBalanceTransaction =
+  | "topup"
+  | "purchase"
+  | "sub_update"
+  | "referral_bonus"
+  | "refund"
+  | "admin_adjustment";

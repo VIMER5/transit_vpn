@@ -17,7 +17,7 @@ export class BalanceTransaction extends Model {
         user_id: { type: DataTypes.INTEGER, allowNull: false },
         amount_kopecks: { type: DataTypes.INTEGER, allowNull: false },
         type: {
-          type: DataTypes.ENUM("topup", "purchase", "referral_bonus", "refund", "admin_adjustment"),
+          type: DataTypes.ENUM("topup", "purchase", "sub_update", "referral_bonus", "refund", "admin_adjustment"),
           allowNull: false,
         },
         reference_id: { type: DataTypes.INTEGER, allowNull: true },

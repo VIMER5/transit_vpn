@@ -8,7 +8,19 @@ class SubError {
     return new AppError("sub_Forbidden", 403, "У вас нет доступа к этой подписке");
   }
   static subNotFound() {
-    return new AppError("sub_NotFound", 404, "У вас нет подписки");
+    return new AppError("sub_NotFound", 404, "Подписка не найдена");
+  }
+  static nothingToUpgrade() {
+    return new AppError("sub_NothingToUpgrade", 409, "Число устройств не изменилось");
+  }
+  static deviceLimitExceeded() {
+    return new AppError("sub_DeviceLimitExceeded", 400, "Превышен лимит устройства");
+  }
+  static notActive() {
+    return new AppError("sub_NotActive", 403, "Подписка не активна");
+  }
+  static priceChanged() {
+    return new AppError("sub_priceChanged", 409, "Цена поменялась");
   }
 }
 

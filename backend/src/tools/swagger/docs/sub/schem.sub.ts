@@ -125,4 +125,62 @@ export const Sub_schema = {
     },
     required: ["custom"],
   },
+  upgradeQuoteResponse: {
+    type: "object",
+    properties: {
+      currentLimit: {
+        type: "number",
+      },
+      newLimit: {
+        type: "number",
+      },
+      differenceDevices: {
+        type: "number",
+      },
+      daysLeft: {
+        type: "number",
+      },
+      priceKopecks: {
+        type: "number",
+      },
+    },
+  },
+  upgradeRequest: {
+    type: "object",
+    required: ["deviceUpgrade"],
+    properties: {
+      deviceUpgrade: {
+        type: "object",
+        required: ["deviceCount", "expectedPriceKopecks"],
+        properties: {
+          deviceCount: {
+            type: "number",
+            minimum: 1,
+            maximum: 100,
+            description: "Желаемое итоговое число устройств",
+          },
+          expectedPriceKopecks: {
+            type: "integer",
+            minimum: 0,
+            description:
+              "Максимальная цена в копейках, которую пользователь согласен заплатить. Берётся из priceKopecks последнего ответа /api/sub/upgrade/quote. Сервер спишет не эту сумму, а свой актуальный расчёт, если он не выше.",
+          },
+        },
+      },
+    },
+    example: {
+      deviceUpgrade: { deviceCount: 5, expectedPriceKopecks: 23000 },
+    },
+  },
+  upgradeResponse: {
+    type: "object",
+    properties: {
+      sub: { $ref: "#/components/schemas/SubInfo" },
+      chargedKopecks: {
+        type: "number",
+        description:
+          "Сколько реально списано с баланса (в копейках). Может быть меньше expectedPriceKopecks, если день сменился между расчётом и покупкой",
+      },
+    },
+  },
 };

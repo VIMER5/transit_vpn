@@ -265,4 +265,154 @@ export const SubPaths = {
       },
     },
   },
+  "/api/sub/upgrade": {
+    patch: {
+      summary: "Изменить число устройств или срока в активной подписке",
+      description:
+        "Сервер всегда списывает собственный расчёт; если он выше, чем expectedPriceKopecks, возвращается 409 и ничего не списывается. \n\nВ этом запросе есть два кейса работы: \n1) обновление устройств; \n2) продление срока подписки",
+      tags: ["Sub"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/upgradeRequest" },
+          },
+        },
+      },
+      responses: {
+        "200": {
+          description: "Число устройств изменено",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/upgradeResponse" },
+            },
+          },
+        },
+        "400": {
+          description: "Некорректные данные или превышено максимальное число устройств",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: {
+                error: { code: "sub_DeviceLimitExceeded", message: "Превышено максимальное число устройств" },
+              },
+            },
+          },
+        },
+        "401": {
+          description: "Unauthorized",
+          content: { "application/json": { schema: { $ref: "#/components/schemas/error" } } },
+        },
+        "402": {
+          description: "Недостаточно средств на балансе",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: { error: { code: "Payment_InsufficientBalanceError", message: "Недостаточно средств" } },
+            },
+          },
+        },
+        "403": {
+          description: "Подписка не активна",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: { error: { code: "sub_NotActive", message: "Подписка не активна" } },
+            },
+          },
+        },
+        "404": {
+          description: "Подписка пользователя не найдена",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: { error: { code: "sub_NotFound", message: "Подписка не найдена" } },
+            },
+          },
+        },
+        "409": {
+          description:
+            "Конфликт. sub_priceChanged: цена выросла с момента расчёта. sub_NothingToUpgrade: запрошенное число устройств равно текущему лимиту.",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: { error: { code: "sub_priceChanged", message: "Стоимость изменилась" } },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/sub/upgrade/quote": {
+    get: {
+      summary: "Рассчитать стоимость изменения числа устройств в активной подписке",
+      description:
+        "Ничего не списывает. Стоимость считается от остатка срока подписки: ставка за устройство в месяц x добавляемые устройства x оставшиеся дни / 30. При уменьшении числа устройств стоимость равна 0, возврат не выполняется.",
+      tags: ["Sub"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: "query",
+          name: "deviceCount",
+          required: true,
+          description: "Желаемое итоговое число устройств. Максимум задаётся в /api/plans/pricing (max_device).",
+          schema: { type: "integer", minimum: 1 },
+          example: 5,
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Расчёт выполнен",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/upgradeQuoteResponse" },
+            },
+          },
+        },
+        "400": {
+          description: "Некорректные данные или превышено максимальное число устройств",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: {
+                error: { code: "sub_DeviceLimitExceeded", message: "Превышен лимит устройства" },
+              },
+            },
+          },
+        },
+        "401": {
+          description: "Unauthorized",
+          content: { "application/json": { schema: { $ref: "#/components/schemas/error" } } },
+        },
+        "403": {
+          description: "Подписка не активна",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: { error: { code: "sub_NotActive", message: "Подписка не активна" } },
+            },
+          },
+        },
+        "404": {
+          description: "Подписка пользователя не найдена",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: { error: { code: "sub_NotFound", message: "Подписка не найдена" } },
+            },
+          },
+        },
+        "409": {
+          description: "Нечего менять: запрошенное число устройств совпадает с текущим лимитом",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/error" },
+              example: { error: { code: "sub_NothingToUpgrade", message: "Число устройств не изменилось" } },
+            },
+          },
+        },
+      },
+    },
+  },
 };

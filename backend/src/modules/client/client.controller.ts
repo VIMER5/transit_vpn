@@ -11,9 +11,9 @@ class clientController {
     try {
       const uuidSub = String(req.params.sub_uuid ?? "");
       const sub = await subscriptionsService.getSubByUuid(uuidSub);
-      if (!sub) return sendBrowserNotFound(res);
       const clientInfo = clientService.clientTypeDetection(req.headers);
-      if (!clientInfo.isVpnClient)
+      if (!sub && !clientInfo.isVpnClient) return sendBrowserNotFound(res);
+      if (!clientInfo.isVpnClient && sub)
         return sendBrowserStubSub(res, {
           expiresAt: sub.expires_at,
           status: sub.status,
@@ -27,6 +27,12 @@ class clientController {
       res.setHeader("hide-url", "1"); // incy
       res.setHeader("profile-web-page-url", "https://t.me/sosentry");
       res.setHeader("profile-title", "SOSENTRY Error");
+      if (!sub && clientInfo.isVpnClient) {
+        const textError = "Ваша подписка не найдена.";
+        res.setHeader("announce", `base64:${Buffer.from(textError).toString("base64")}`);
+        return res.send(errorMSG(`🚨_${textError}`));
+      }
+      if (!sub) return sendBrowserNotFound(res);
       if (sub.status === "expired") {
         const textError = "Ваша подписка истекла.";
         res.setHeader("announce", `base64:${Buffer.from(textError).toString("base64")}`);

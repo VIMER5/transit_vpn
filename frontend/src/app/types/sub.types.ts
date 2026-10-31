@@ -28,3 +28,15 @@ export interface deviceList {
 export interface rotateUuidSubResponse {
   sub_uuid: string;
 }
+
+export interface upgradeDeviceQuoteResponse {
+  currentLimit: number;
+  newLimit: number;
+  differenceDevices: number;
+  daysLeft: number;
+  priceKopecks: number;
+}
+export interface upgradeDeviceResponse {
+  sub: subInfo;
+  chargedKopecks: number;
+}

@@ -11,7 +11,8 @@ import PlansError from "../../shared/errors/plans.error.js";
 import { subDevice } from "../../infrastructure/database/models/subDevice.model.js";
 import { UniqueConstraintError } from "sequelize";
 import { randomUUID } from "node:crypto";
-
+import plansService from "../plans/plans.service.js";
+const DAY_MS = 86_400_000;
 class subService {
   async rotateSubUuid(subId: number): Promise<string> {
     const sub = await subscriptions.findByPk(subId);
@@ -94,6 +95,52 @@ class subService {
     });
     if (!sub) throw SubError.subNotFound();
     return sub;
+  }
+  quoteDeviceUpgrade(sub: subscriptions, pricing: pricingConfig, newDeviceCount: number) {
+    if (sub.device_limit === newDeviceCount) throw SubError.nothingToUpgrade();
+    if (newDeviceCount > pricing.max_device) throw SubError.deviceLimitExceeded();
+    const difference = newDeviceCount - sub.device_limit;
+    const daysLeft = Math.ceil((sub.expires_at.getTime() - Date.now()) / DAY_MS);
+    if (daysLeft <= 0) throw SubError.notActive();
+    let priceKopecks = 0;
+    if (difference > 0) priceKopecks = Math.round((pricing.device_month_rate_kopecks * difference * daysLeft) / 30);
+    return {
+      currentLimit: sub.device_limit,
+      newLimit: newDeviceCount,
+      differenceDevices: difference,
+      daysLeft,
+      priceKopecks,
+    };
+  }
+  async userDeviceUpgrade(userId: bigint, deviceCount: number, maxPriceKopecks: number) {
+    return db.transaction(async (t) => {
+      const user = await User.findByPk(userId, {
+        attributes: ["id", "balance", "sub_id"],
+        lock: t.LOCK.UPDATE,
+        transaction: t,
+      });
+      if (!user?.sub_id) throw SubError.subNotFound();
+      const sub = await subscriptions.findByPk(user.sub_id, { lock: t.LOCK.UPDATE, transaction: t });
+      if (!sub || sub.status !== "active" || sub.expires_at <= new Date()) throw SubError.notActive();
+      const pricing = await plansService.getPricing({ transaction: t });
+      if (!pricing) throw PlansError.NotFound();
+
+      const q = this.quoteDeviceUpgrade(sub, pricing, deviceCount);
+
+      if (q.priceKopecks > maxPriceKopecks) throw SubError.priceChanged();
+
+      if (q.priceKopecks > 0) {
+        await paymentService.debitBalance(
+          userId,
+          q.priceKopecks,
+          { type: "sub_update", referenceId: sub.id },
+          { transaction: t },
+        );
+      }
+      await sub.update({ device_limit: deviceCount }, { transaction: t });
+
+      return { sub, chargedKopecks: q.priceKopecks };
+    });
   }
   async trials(userId: bigint) {
     return db.transaction(async (t) => {
